@@ -484,7 +484,7 @@ void ModuleEditor::UpdateWindowStatus() {
         ImGui::Begin("Hierarchy", &showHierarchyWindow);
 
         //Just cleaning gameObjects(not textures,buffers...)
-        if (ImGui::Button("Clear", { 60,20 })) 
+        /*if (ImGui::Button("Clear", {60,20}))
         {
             App->editor->gameobjectSelected = nullptr;
             App->scene->CleanUp(); //Clean GameObjects 
@@ -493,7 +493,7 @@ void ModuleEditor::UpdateWindowStatus() {
         if (ImGui::Button("New", { 60,20 }))
         {
             App->scene->CreateGameObject();
-        }
+        }*/
         std::stack<GameObject*> S;
         std::stack<uint> indents;
         S.push(App->scene->root);

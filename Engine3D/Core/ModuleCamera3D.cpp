@@ -79,12 +79,11 @@ update_status ModuleCamera3D::Update(float dt)
 		}
 	}
 	
+	//Move
 	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) 
 		newPos += front * speed;
 	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
 		newPos -= front * speed;
-
-
 	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) 
 		newPos += right * speed;
 	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) 
@@ -96,6 +95,11 @@ update_status ModuleCamera3D::Update(float dt)
 		newPos -= front * speed * 2;
 
 	position += newPos;
+
+	// Mouse Picking
+
+
+	//
 
 	// Mouse motion ----------------
 
