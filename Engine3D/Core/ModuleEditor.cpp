@@ -571,6 +571,14 @@ void ModuleEditor::UpdateWindowStatus() {
 
     if (showGameWindow) {
         ImGui::Begin("Game", &showGameWindow, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar);
+        ImVec2 viewportSize = ImGui::GetCurrentWindow()->Size;
+        if (viewportSize.x != lastViewportSize.x || viewportSize.y != lastViewportSize.y)
+        {
+            App->camera->aspectRatio = viewportSize.x / viewportSize.y;
+            App->camera->RecalculateProjection();
+        }
+        lastViewportSize = viewportSize;
+        //ImGui::Image((ImTextureID)App->viewportBuffer->texture, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::End();
     }
 

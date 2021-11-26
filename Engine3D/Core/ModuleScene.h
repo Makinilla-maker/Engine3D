@@ -4,6 +4,8 @@
 #include "Module.h"
 #include "Globals.h"
 #include "ModuleImport.h"
+#include "Geometry/Frustum.h"
+
 
 #include "GameObject.h"
 class ModuleScene : public Module
@@ -21,4 +23,5 @@ public:
 public:
 	
 	GameObject* root;
+	Frustum camera;
 };
