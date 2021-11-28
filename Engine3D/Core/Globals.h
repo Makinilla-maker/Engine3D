@@ -6,6 +6,7 @@
 
 #include <windows.h>
 #include <stdio.h>
+#include "Assimp/include/material.h"
 
 #define LOAD_JSON_BOOL(b) { b = config.HasMember(#b) ? config[#b].GetBool() : b; }
 #define SAVE_JSON_BOOL(b) { writer.String(#b); writer.Bool(b); }
@@ -36,6 +37,13 @@ enum update_status
 	UPDATE_STOP,
 	UPDATE_ERROR
 };
+/*
+namespace MaterialImporter
+{
+	void Import(const aiMaterial* material, Material* ourMaterial);
+	uint64 Save(const Material* ourMaterial, char** fileBuffer);
+	void Load(const char* fileBuffer, Material* ourMaterial);
+};*/
 
 // Configuration -----------
 #define SCREEN_WIDTH 1280
