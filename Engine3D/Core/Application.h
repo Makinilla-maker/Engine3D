@@ -54,6 +54,8 @@ public:
 	void AddModule(Module* mod);
 	void PrepareUpdate();
 	void FinishUpdate();
+	
+	void RecolVector(std::vector<float>* vec, int size, float dt);
 
 	void OnGui();
 
@@ -62,6 +64,9 @@ public:
 	float				fps;
 	float				dt;
 	int					cap;
+	int					cappedMs = -1;
+	int					columns;
+	char				title[25];
 	PerfTimer			ptimer;
 	Timer				ms_timer;
 	Timer				frame_time;

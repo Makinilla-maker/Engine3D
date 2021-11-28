@@ -55,6 +55,7 @@ Application::Application()
 	vsync = false;
 	fps = 0.0f;
 	cap = 60;
+	columns = 32;
 
 	PERF_PEEK(ptimer);
 }
@@ -138,7 +139,7 @@ void Application::PrepareUpdate()
 void Application::FinishUpdate()
 {
 
-	// Framerate calculations --
+	/*// Framerate calculations --
 	if (last_sec_frame_time.Read() > 1000)
 	{
 		last_sec_frame_time.Start();
@@ -146,7 +147,12 @@ void Application::FinishUpdate()
 		last_sec_frame_count = 0;
 	}
 
-	uint32 last_frame_ms = frame_time.Read();
+	uint32 last_frame_ms = frame_time.Read();*/
+	cappedMs = (1000 / cap) - dt;
+	if (cappedMs > 0)
+	{
+		SDL_Delay(cappedMs);
+	}
 
 }
 
@@ -244,7 +250,7 @@ void Application::DrawFPSDiagram() {
 	ImGui::InputText("App Name", TITLE, 20);
 	ImGui::InputText("Organization", ORGANITZATION, 20);
 	ImGui::SliderInt("Framerate", &cap, -1, 120);
-
+	
 	if (fps_log.size() != 30)
 	{
 		fps_log.push_back(fps);
@@ -258,9 +264,12 @@ void Application::DrawFPSDiagram() {
 		ms_log.push_back(dt * 1000);
 	}
 
-	char title[25];
-	sprintf_s(title, 25, "Framerate %.1f", fps_log[fps_log.size() - 1]);
+	
+	RecolVector(&fps_log, columns, dt);
+
+	sprintf_s(title, columns, "Framerate %.1f", fps_log[fps_log.size() - 1]);
 	ImGui::PlotHistogram("##framerate", &fps_log[0], fps_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
+
 	sprintf_s(title, 25, "Milliseconds %.1f", ms_log[ms_log.size() - 1]);
 	ImGui::PlotHistogram("##framerate", &ms_log[0], ms_log.size(), 0, title, 0.0f, 100.0f, ImVec2(310, 100));
 
@@ -320,4 +329,13 @@ void Application::DrawHardwareConsole() {
 	ImGui::SameLine();
 	if (SDL_HasSSE42() == SDL_TRUE)ImGui::TextColored(ImVec4(1, 1, 0, 1), "SSE42, ");
 	
+}
+void Application::RecolVector(std::vector<float>* vec, int size, float dt)
+{
+	if (vec->size() <= size)
+		vec->push_back(1 / dt);
+	else {
+		vec->erase(vec->begin());
+		vec->push_back(1 / dt);
+	}
 }

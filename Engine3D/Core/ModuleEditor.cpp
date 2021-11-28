@@ -33,6 +33,7 @@ ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, s
     showConfWindow = true;
 
     showConsoleWindow = true;
+    showAssetsWindow = true;
     showHierarchyWindow = true;
     showInspectorWindow = true;
     showGameWindow = true;
@@ -103,6 +104,8 @@ update_status ModuleEditor::Update(float dt)
         MenuBar();
         ImGui::End();
     }
+    if (gameobjectSelected != nullptr && App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
+        App->scene->root->RemoveChild(gameobjectSelected);
 
     //Update status of each window and shows ImGui elements
     UpdateWindowStatus();
@@ -465,6 +468,13 @@ void ModuleEditor::UpdateWindowStatus() {
         ImGui::End();
     }
 
+    if (showAssetsWindow) {
+
+        ImGui::Begin("Assets", &showAssetsWindow);
+        
+        ImGui::End();
+    }
+
     //Inspector
     if (showInspectorWindow) {
 
@@ -578,7 +588,7 @@ void ModuleEditor::UpdateWindowStatus() {
             App->camera->RecalculateProjection();
         }
         lastViewportSize = viewportSize;
-        //ImGui::Image((ImTextureID)App->viewportBuffer->texture, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::Image((ImTextureID)App->viewportBuffer->texture, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::End();
     }
 
