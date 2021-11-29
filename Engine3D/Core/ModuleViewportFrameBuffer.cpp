@@ -8,7 +8,7 @@
 #include "glew.h"
 #include <gl/GL.h>
 
-ModuleViewportFrameBuffer::ModuleViewportFrameBuffer(Application* app, bool start_enabled) : Module(app, start_enabled){
+ModuleViewportFrameBuffer::ModuleViewportFrameBuffer(){
 
 	show_viewport_window = true;
 }

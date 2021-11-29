@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "ModuleViewportFrameBuffer.h"
 
 #include "ImGui/imgui.h"
 #include <string>
@@ -72,5 +73,8 @@ public:
 	GameObject* gameobjectSelected;
 
 	ImVec2 lastViewportSize;
+	
+	ModuleViewportFrameBuffer viewPortScene;
+	ModuleViewportFrameBuffer viewPortGame;
 
 };

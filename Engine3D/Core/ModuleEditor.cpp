@@ -60,6 +60,9 @@ bool ModuleEditor::Init() {
 // Called before render is available
 bool ModuleEditor::Start()
 {
+    viewPortScene.Start();
+    viewPortGame.Start();
+
 	bool ret = true;
 	
     // Setup Dear ImGui context
@@ -81,11 +84,14 @@ bool ModuleEditor::Start()
     
     CreateGridBuffer();
 
+
+
     return ret;
 }
 
 update_status ModuleEditor::PreUpdate(float dt) {
-
+    viewPortGame.PreUpdate(dt);
+    viewPortScene.PreUpdate(dt);
     // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame(App->window->window);
@@ -114,6 +120,9 @@ update_status ModuleEditor::Update(float dt)
 }
 
 update_status ModuleEditor::PostUpdate(float dt) {
+
+    viewPortGame.PostUpdate(dt);
+    viewPortScene.PostUpdate(dt);
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
@@ -613,7 +622,7 @@ void ModuleEditor::UpdateWindowStatus() {
             App->camera->RecalculateProjection();
         }
         lastViewportSize = viewportSize;
-        ImGui::Image((ImTextureID)App->viewportBuffer->texture, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::Image((ImTextureID)viewPortGame.texture, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::End();
     }
 
@@ -628,7 +637,7 @@ void ModuleEditor::UpdateWindowStatus() {
             App->camera->RecalculateProjection();
         }
         lastViewportSize = viewportSize;
-        ImGui::Image((ImTextureID)App->viewportBuffer->texture, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::Image((ImTextureID)viewPortScene.texture, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::End();
     }
     
