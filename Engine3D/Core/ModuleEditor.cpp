@@ -61,7 +61,7 @@ bool ModuleEditor::Init() {
 bool ModuleEditor::Start()
 {
     viewPortScene.Start();
-    viewPortGame.Start();
+    //viewPortGame.Start();
 
 	bool ret = true;
 	
@@ -90,8 +90,9 @@ bool ModuleEditor::Start()
 }
 
 update_status ModuleEditor::PreUpdate(float dt) {
-    viewPortGame.PreUpdate(dt);
+    //viewPortGame.PreUpdate(dt);
     viewPortScene.PreUpdate(dt);
+
     // Start the Dear ImGui frame
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame(App->window->window);
@@ -121,7 +122,7 @@ update_status ModuleEditor::Update(float dt)
 
 update_status ModuleEditor::PostUpdate(float dt) {
 
-    viewPortGame.PostUpdate(dt);
+    //viewPortGame.PostUpdate(dt);
     viewPortScene.PostUpdate(dt);
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;

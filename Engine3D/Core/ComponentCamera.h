@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "Geometry/Frustum.h"
+#include "Math/float4x4.h"
 
 struct TextureObject;
 
@@ -14,6 +15,7 @@ public:
 	virtual ~ComponentCamera();
 
 	bool Update(float dt) override;
+	bool PreUpdate(float dt);
 
 	float4x4 ViewMatrixOpenGL() const;
 	float4x4 ProjectionMatrixOpenGL() const;
@@ -27,11 +29,10 @@ public:
 
 	unsigned int framebuffer;
 	unsigned int texColorBuffer;
-	unsigned int rbo;
-
-	
+	unsigned int rbo;	
 
 private:
 
 	Frustum frustrum;
+	float4x4 viewMatrix;
 };

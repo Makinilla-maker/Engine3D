@@ -71,6 +71,23 @@ update_status ModuleScene::Update(float dt)
 			S.push(child);
 		}
 	}
+	/*
+	std::queue<GameObject*> S;
+	for (GameObject* child : root->children)
+	{
+		S.push(child);
+	}
+
+	while (!S.empty())
+	{
+		GameObject* go = S.front();
+		go->Update(dt);
+		S.pop();
+		for (GameObject* child : go->children)
+		{
+			S.push(child);
+		}
+	}*/
 
 	return UPDATE_CONTINUE;
 }

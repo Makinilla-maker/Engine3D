@@ -54,7 +54,6 @@ bool ModuleViewportFrameBuffer::Start() {
 }
 
 update_status ModuleViewportFrameBuffer::PreUpdate(float dt) {
-
 	
 	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);

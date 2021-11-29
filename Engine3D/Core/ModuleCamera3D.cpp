@@ -91,7 +91,7 @@ update_status ModuleCamera3D::Update(float dt)
 		newPos -= front * speed * 2;
 
 	position += newPos;
-
+	if (!newPos.Equals(float3::zero)) CalculateViewMatrix();
 	// Mouse Picking
 
 

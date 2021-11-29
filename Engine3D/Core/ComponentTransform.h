@@ -19,6 +19,8 @@ public:
 	void SetScale(const float3& newScale);
 
 	inline float3 GetPosition() const { return position; };
+	inline float3 GetForward() const { return  transformMatrix.RotatePart().Col(2).Normalized(); };
+	inline float3 GetUp() const { return  transformMatrix.RotatePart().Col(1).Normalized(); };
 	inline float3 GetRotation() const { return rotationEuler; };
 	inline float3 GetScale() const { return scale; };
 
