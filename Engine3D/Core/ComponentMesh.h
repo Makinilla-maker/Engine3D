@@ -5,6 +5,7 @@
 #include "Math/float3.h"
 #include "Math/float2.h"
 #include "Geometry/AABB.h"
+#include "Geometry/OBB.h"
 #include "par_shapes.h"
 
 class ComponentMesh : public Component {
@@ -27,6 +28,7 @@ public:
 	void GenerateBuffers();
 	void ComputeNormals();
 	void GenerateBounds();
+	bool IsInsideFrustum(Frustum* camFrustum);
 	void DrawNormals() const;
 	float3 GetCenterPointInWorldCoords() const;
 	inline float GetSphereRadius() const { return radius; }
@@ -53,7 +55,11 @@ public:
 	bool drawWireframe = false;
 	bool drawVertexNormals = false;
 	bool drawFaceNormals = false;
+	bool showBoxAABB = true;
 	float normalScale = 1.f;
+
+	AABB globalAABB;
+	OBB globalOBB;
 	
 private:
 

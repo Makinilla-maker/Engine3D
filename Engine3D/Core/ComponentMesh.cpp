@@ -4,12 +4,17 @@
 #include "SDL/include/SDL_opengl.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleCamera3D.h"
 #include "ComponentMaterial.h"
 #include "ComponentTransform.h"
 #include "GameObject.h"
 #include "ImGui/imgui.h"
 #include "Geometry/Sphere.h"
 #include "par_shapes.h"
+
+
+#include"MathGeoLib/include/Geometry/Frustum.h"
+#include"MathGeoLib/include/Geometry/Plane.h"
 
 
 ComponentMesh::ComponentMesh(GameObject* parent) : Component(parent) {}
@@ -28,6 +33,7 @@ ComponentMesh::ComponentMesh(GameObject* parent, Shape shape) : Component(parent
 		CopyParMesh(par_shapes_create_parametric_sphere(20, 20));
 		break;
 	}
+
 }
 
 ComponentMesh::~ComponentMesh()
@@ -125,6 +131,50 @@ void ComponentMesh::GenerateBounds()
 
 	radius = sphere.r;
 	centerPoint = sphere.pos;
+
+	/*
+	globalOBB = _mesh->localAABB;
+	globalOBB.Transform(gameObject->transform->globalTransform);
+
+	// Generate global AABB
+	globalAABB.SetNegativeInfinity();
+	globalAABB.Enclose(globalOBB);
+	*/
+}
+bool ComponentMesh::IsInsideFrustum(Frustum* camFrustum)
+{
+	float3 obbPoints[8];
+	Plane frustumPlanes[6];
+
+	int totalIn = 0;
+
+	globalAABB.GetCornerPoints(obbPoints);
+	camFrustum->GetPlanes(frustumPlanes);
+
+	for (size_t i = 0; i < 6; i++)
+	{
+		int inCount = 8;
+		int iPtIn = 1;
+
+		for (size_t k = 0; k < 8; k++)
+		{
+			//Is "IsOnPositiveSide" slow?
+			if (frustumPlanes[i].IsOnPositiveSide(obbPoints[k]))
+			{
+				iPtIn = 0;
+				--inCount;
+			}
+			if (inCount == 0)
+				return false;
+
+			totalIn += iPtIn;
+		}
+	}
+
+	if (totalIn == 6)
+		return true;
+
+	return true;
 }
 
 void ComponentMesh::DrawNormals() const
@@ -164,6 +214,15 @@ float3 ComponentMesh::GetCenterPointInWorldCoords() const
 
 bool ComponentMesh::Update(float dt)
 {
+	if (!IsInsideFrustum(&App->camera->cameraFrustum))
+		return false;
+
+	if (showBoxAABB == true) {
+		float3 points[8];
+		globalAABB.GetCornerPoints(points);
+		App->renderer3D->DrawBox(points, float3(0.2f, 1.f, 0.101f));
+	}
+	
 	//if esta dentro de la camera (OOBB AABB)
 	drawWireframe || App->renderer3D->wireframeMode ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
