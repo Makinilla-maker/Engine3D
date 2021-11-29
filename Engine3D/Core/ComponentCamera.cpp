@@ -77,6 +77,7 @@ void ComponentCamera::RecalculateProjection()
 void ComponentCamera::LookAt(const float3& point)
 {
 	float3 right;
+
 	frustrum.front = (point - frustrum.pos).Normalized();
 	right = float3(0.0f, 1.0f, 0.0f).Cross(frustrum.front).Normalized();
 	frustrum.up = frustrum.front.Cross(right);
