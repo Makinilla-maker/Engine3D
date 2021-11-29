@@ -37,13 +37,7 @@ enum update_status
 	UPDATE_STOP,
 	UPDATE_ERROR
 };
-/*
-namespace MaterialImporter
-{
-	void Import(const aiMaterial* material, Material* ourMaterial);
-	uint64 Save(const Material* ourMaterial, char** fileBuffer);
-	void Load(const char* fileBuffer, Material* ourMaterial);
-};*/
+
 
 // Configuration -----------
 #define SCREEN_WIDTH 1280

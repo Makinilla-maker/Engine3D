@@ -105,7 +105,7 @@ update_status ModuleEditor::Update(float dt)
         ImGui::End();
     }
     if (gameobjectSelected != nullptr && App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
-        App->scene->root->RemoveChild(gameobjectSelected);
+        gameobjectSelected->parent->RemoveChild(gameobjectSelected);
 
     //Update status of each window and shows ImGui elements
     UpdateWindowStatus();
@@ -348,16 +348,41 @@ void ModuleEditor::MenuBar() {
 
             if (ImGui::BeginMenu("3D Objects")) {
                 if (ImGui::MenuItem("Cube")) {
-                    GameObject* newGameObject = App->scene->CreateGameObject("Cube");
-                    ComponentMesh* newMesh = new ComponentMesh(newGameObject, ComponentMesh::Shape::CUBE);
+                    if (gameobjectSelected != nullptr)
+                    {
+                        GameObject* newGameObject = App->scene->CreateGameObject("Cube",gameobjectSelected);
+                        ComponentMesh* newMesh = new ComponentMesh(newGameObject, ComponentMesh::Shape::CUBE);
+                    }
+                    else
+                    {
+                        GameObject* newGameObject = App->scene->CreateGameObject("Cube");
+                        ComponentMesh* newMesh = new ComponentMesh(newGameObject, ComponentMesh::Shape::CUBE);
+                    }
+                    
                 }
                 if (ImGui::MenuItem("Sphere")) {
-                    GameObject* newGameObject = App->scene->CreateGameObject("Sphere");
-                    ComponentMesh* newMesh = new ComponentMesh(newGameObject, ComponentMesh::Shape::SPHERE);
+                    if (gameobjectSelected != nullptr)
+                    {
+                        GameObject* newGameObject = App->scene->CreateGameObject("Sphere",gameobjectSelected);
+                        ComponentMesh* newMesh = new ComponentMesh(newGameObject, ComponentMesh::Shape::SPHERE);
+                    }
+                    else
+                    {
+                        GameObject* newGameObject = App->scene->CreateGameObject("Sphere");
+                        ComponentMesh* newMesh = new ComponentMesh(newGameObject, ComponentMesh::Shape::SPHERE);
+                    }
                 }
                 if (ImGui::MenuItem("Cylinder")) {
-                    GameObject* newGameObject = App->scene->CreateGameObject("Cylinder");
-                    ComponentMesh* newMesh = new ComponentMesh(newGameObject, ComponentMesh::Shape::CYLINDER);
+                    if (gameobjectSelected != nullptr)
+                    {
+                        GameObject* newGameObject = App->scene->CreateGameObject("Cylinder",gameobjectSelected);
+                        ComponentMesh* newMesh = new ComponentMesh(newGameObject, ComponentMesh::Shape::CYLINDER);
+                    }
+                    else
+                    {
+                        GameObject* newGameObject = App->scene->CreateGameObject("Cylinder");
+                        ComponentMesh* newMesh = new ComponentMesh(newGameObject, ComponentMesh::Shape::CYLINDER);
+                    }
                 }
                 ImGui::EndMenu();
             }
