@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Application.h"
 #include "ModuleScene.h"
+#include "ComponentCamera.h"
 #include "glew.h"
 #include "ImGui/imgui.h"
 
@@ -51,6 +52,10 @@ void ComponentTransform::OnGui()
 		if (ImGui::DragFloat3("Scale", &(newScale[0])))
 		{
 			SetScale(newScale);
+		}
+		if (isDirty && owner->GetComponent<ComponentCamera>() != nullptr)
+		{
+			owner->GetComponent<ComponentCamera>()->movedCamera = true;
 		}
 	}
 }

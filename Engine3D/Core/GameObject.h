@@ -40,6 +40,7 @@ public:
 	void AddComponent(Component* component);
 	void AttachChild(GameObject* child);
 	void RemoveChild(GameObject* child);
+	bool FindComponent(Component* component);
 	void PropagateTransform();
 
 	std::string name;

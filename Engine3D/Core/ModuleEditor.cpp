@@ -13,6 +13,7 @@
 #include "ModuleTextures.h"
 #include "ComponentMaterial.h"
 #include "ComponentMesh.h"
+#include "ComponentCamera.h"
 
 //Tools
 
@@ -61,7 +62,6 @@ bool ModuleEditor::Init() {
 bool ModuleEditor::Start()
 {
     viewPortScene.Start();
-    //viewPortGame.Start();
 
 	bool ret = true;
 	
@@ -89,8 +89,8 @@ bool ModuleEditor::Start()
     return ret;
 }
 
-update_status ModuleEditor::PreUpdate(float dt) {
-    //viewPortGame.PreUpdate(dt);
+update_status ModuleEditor::PreUpdate(float dt) 
+{
     viewPortScene.PreUpdate(dt);
 
     // Start the Dear ImGui frame
@@ -105,7 +105,6 @@ update_status ModuleEditor::PreUpdate(float dt) {
 // PreUpdate: clear buffer
 update_status ModuleEditor::Update(float dt)
 {
-    DrawGrid();
     //Creating MenuBar item as a root for docking windows
     if (DockingRootItem("Viewport", ImGuiWindowFlags_MenuBar)) {
         MenuBar();
@@ -120,11 +119,8 @@ update_status ModuleEditor::Update(float dt)
     return UPDATE_CONTINUE;
 }
 
-update_status ModuleEditor::PostUpdate(float dt) {
-
-    //viewPortGame.PostUpdate(dt);
-    viewPortScene.PostUpdate(dt);
-
+update_status ModuleEditor::PostUpdate(float dt) 
+{
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
     // Rendering
@@ -623,7 +619,7 @@ void ModuleEditor::UpdateWindowStatus() {
             App->camera->RecalculateProjection();
         }
         lastViewportSize = viewportSize;
-        ImGui::Image((ImTextureID)viewPortGame.texture, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
+        ImGui::Image((ImTextureID)App->scene->cameraGame->GetComponent<ComponentCamera>()->viewPortGame.texture, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::End();
     }
 

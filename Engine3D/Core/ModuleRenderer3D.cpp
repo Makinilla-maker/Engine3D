@@ -3,6 +3,7 @@
 #include "ModuleRenderer3D.h"
 #include "ModuleWindow.h"
 #include "ModuleCamera3D.h"
+#include "ComponentCamera.h"
 #include "ModuleScene.h"
 #include "ModuleEditor.h"
 
@@ -182,6 +183,10 @@ void ModuleRenderer3D::OnResize(int width, int height)
 {
 	glViewport(0, 0, width, height);
 	App->camera->RecalculateProjection();
+	if (App->scene->cameraGame != nullptr) 
+	{
+		App->scene->cameraGame->GetComponent<ComponentCamera>()->RecalculateProjection();
+	}
 }
 
 void ModuleRenderer3D::OnGui() {

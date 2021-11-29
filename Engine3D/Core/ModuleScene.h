@@ -13,8 +13,10 @@ class ModuleScene : public Module
 public:
 	ModuleScene(Application* app, bool start_enabled = true);
 
+	bool Init() override;
 	bool Start() override;
 	update_status Update(float dt) override;
+	update_status PostUpdate(float dt) override;
 	bool CleanUp() override;
 
 	GameObject* CreateGameObject(GameObject* parent = nullptr);	
@@ -23,5 +25,6 @@ public:
 public:
 	
 	GameObject* root;
-	Frustum camera;
+	GameObject* cameraGame;
+	
 };

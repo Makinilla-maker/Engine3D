@@ -6,6 +6,9 @@
 #include "ModuleImport.h"
 #include "ModuleTextures.h"
 #include "ModuleCamera3D.h"
+#include "ModuleEditor.h"
+#include "ComponentCamera.h"
+#include "ComponentTransform.h"
 #include "Component.h"
 #include <stack>
 #include <queue>
@@ -14,17 +17,29 @@ ModuleScene::ModuleScene(Application* app, bool start_enabled) : Module(app, sta
 {
 }
 
+bool ModuleScene::Init()
+{
+	root = new GameObject("Root");
+	//Loading house and textures since beginning
+
+	cameraGame = CreateGameObject("Camera", root);
+	cameraGame->CreateComponent<ComponentCamera>();
+
+	return true;
+}
+
 bool ModuleScene::Start()
 {
 	LOG("Loading Intro assets");
-	bool ret = true;
 	
-	root = new GameObject("Root");
-
-	//Loading house and textures since beginning
 	App->import->LoadGeometry("Assets/Models/BakerHouse.fbx");
+
+	cameraGame->GetComponent<ComponentCamera>()->Start();
+
+	cameraGame->GetComponent<ComponentTransform>()->SetPosition(float3(0,3,-14));
+	cameraGame->GetComponent<ComponentCamera>()->LookAt(float3(0,0,0));
 	
-	return ret;
+	return true;
 }
 
 bool ModuleScene::CleanUp()
@@ -71,24 +86,37 @@ update_status ModuleScene::Update(float dt)
 			S.push(child);
 		}
 	}
-	/*
-	std::queue<GameObject*> S;
-	for (GameObject* child : root->children)
-	{
-		S.push(child);
-	}
+	App->editor->DrawGrid();
+	App->editor->viewPortScene.PostUpdate(dt);
 
-	while (!S.empty())
+	if (cameraGame != nullptr)
 	{
-		GameObject* go = S.front();
-		go->Update(dt);
-		S.pop();
-		for (GameObject* child : go->children)
+		cameraGame->GetComponent<ComponentCamera>()->PreUpdate(dt);
+		std::queue<GameObject*> S;
+		for (GameObject* child : root->children)
 		{
 			S.push(child);
 		}
-	}*/
 
+		while (!S.empty())
+		{
+			GameObject* go = S.front();
+			go->Update(dt);
+			S.pop();
+			for (GameObject* child : go->children)
+			{
+				S.push(child);
+			}
+		}
+		App->editor->DrawGrid();
+		cameraGame->GetComponent<ComponentCamera>()->PostUpdate(dt);
+	}
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleScene::PostUpdate(float dt)
+{
 	return UPDATE_CONTINUE;
 }
 

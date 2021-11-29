@@ -75,6 +75,5 @@ public:
 	ImVec2 lastViewportSize;
 	
 	ModuleViewportFrameBuffer viewPortScene;
-	ModuleViewportFrameBuffer viewPortGame;
 
 };

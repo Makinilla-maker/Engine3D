@@ -93,6 +93,18 @@ void GameObject::RemoveChild(GameObject* child)
 	}
 }
 
+bool GameObject::FindComponent(Component* component)
+{
+	for (int i; i<components.size();++i)
+	{
+		if (components[i] == component)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void GameObject::PropagateTransform()
 {
 	for (GameObject* go : children)
