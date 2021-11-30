@@ -28,7 +28,8 @@ public:
 	void GenerateBuffers();
 	void ComputeNormals();
 	void GenerateBounds();
-	bool IsInsideFrustum(Frustum* camFrustum);
+	void GenerateGlobalBounds();
+	bool IsCameraSeenIt(Frustum* camFrustum);
 	void DrawNormals() const;
 	float3 GetCenterPointInWorldCoords() const;
 	inline float GetSphereRadius() const { return radius; }
@@ -55,19 +56,20 @@ public:
 	bool drawWireframe = false;
 	bool drawVertexNormals = false;
 	bool drawFaceNormals = false;
-	bool showBoxAABB = true;
+	bool showAABB = false;
+	bool showOBB = false;
 	float normalScale = 1.f;
 
 	AABB globalAABB;
 	OBB globalOBB;
 	
+	//Local coords AABB
+	AABB localAABB;
 private:
 
 	//Bounding sphere
 	float3 centerPoint = float3::zero;
 	float radius;
 
-	//Local coords AABB
-	AABB localAABB;
 	
 };

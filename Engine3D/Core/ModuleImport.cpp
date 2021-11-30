@@ -8,6 +8,7 @@
 #include "ModuleScene.h"
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
+#include "ComponentTransform.h"
 #include "GameObject.h"
 
 #include <vector>
@@ -150,6 +151,9 @@ bool ModuleImport::LoadGeometry(const char* path) {
 			mesh->GenerateBuffers();
 			mesh->GenerateBounds();
 			mesh->ComputeNormals();
+			
+			mesh->GenerateGlobalBounds();
+			
 		}
 		aiReleaseImport(scene);		
 		RELEASE_ARRAY(buffer);

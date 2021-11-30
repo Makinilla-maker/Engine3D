@@ -17,7 +17,10 @@
 #include"MathGeoLib/include/Geometry/Plane.h"
 
 
-ComponentMesh::ComponentMesh(GameObject* parent) : Component(parent) {}
+ComponentMesh::ComponentMesh(GameObject* parent) : Component(parent) 
+{
+
+}
 
 ComponentMesh::ComponentMesh(GameObject* parent, Shape shape) : Component(parent)
 {
@@ -61,6 +64,9 @@ void ComponentMesh::CopyParMesh(par_shapes_mesh* parMesh)
 	{
 		indices[i] = parMesh->triangles[i];
 	}
+	
+	
+
 	memcpy(&normals[0], parMesh->normals, numVertices);
 
 	par_shapes_free_mesh(parMesh);
@@ -68,6 +74,7 @@ void ComponentMesh::CopyParMesh(par_shapes_mesh* parMesh)
 	GenerateBuffers();
 	ComputeNormals();
 	GenerateBounds();
+	GenerateGlobalBounds();
 }
 
 
@@ -132,24 +139,26 @@ void ComponentMesh::GenerateBounds()
 	radius = sphere.r;
 	centerPoint = sphere.pos;
 
-	/*
-	globalOBB = _mesh->localAABB;
-	globalOBB.Transform(gameObject->transform->globalTransform);
+}
+
+void ComponentMesh::GenerateGlobalBounds()
+{
+	globalOBB = localAABB;
+	globalOBB.Transform(owner->parent->transform->transformMatrixLocal);
 
 	// Generate global AABB
 	globalAABB.SetNegativeInfinity();
 	globalAABB.Enclose(globalOBB);
-	*/
 }
-bool ComponentMesh::IsInsideFrustum(Frustum* camFrustum)
+bool ComponentMesh::IsCameraSeenIt(Frustum* camFrustum)
 {
-	float3 obbPoints[8];
-	Plane frustumPlanes[6];
+	float3 obb[8];
+	Plane frustum[6];
 
 	int totalIn = 0;
 
-	globalAABB.GetCornerPoints(obbPoints);
-	camFrustum->GetPlanes(frustumPlanes);
+	camFrustum->GetPlanes(frustum);
+	globalAABB.GetCornerPoints(obb);
 
 	for (size_t i = 0; i < 6; i++)
 	{
@@ -158,8 +167,7 @@ bool ComponentMesh::IsInsideFrustum(Frustum* camFrustum)
 
 		for (size_t k = 0; k < 8; k++)
 		{
-			//Is "IsOnPositiveSide" slow?
-			if (frustumPlanes[i].IsOnPositiveSide(obbPoints[k]))
+			if (frustum[i].IsOnPositiveSide(obb[k]))
 			{
 				iPtIn = 0;
 				--inCount;
@@ -214,58 +222,65 @@ float3 ComponentMesh::GetCenterPointInWorldCoords() const
 
 bool ComponentMesh::Update(float dt)
 {
-	if (!IsInsideFrustum(&App->camera->cameraFrustum))
-		return false;
+	if (IsCameraSeenIt(&App->camera->cameraFrustum))
+	{
+		
 
-	if (showBoxAABB == true) {
-		float3 points[8];
-		globalAABB.GetCornerPoints(points);
-		App->renderer3D->DrawBox(points, float3(0.2f, 1.f, 0.101f));
+		if (showAABB) {
+			float3 points[8];
+			globalAABB.GetCornerPoints(points);
+			App->renderer3D->DrawBox(points, float3(0.2f, 1.f, 0.101f));
+		}
+		if (showOBB)
+		{
+			float3 points[8];
+			globalOBB.GetCornerPoints(points);
+			App->renderer3D->DrawBox(points, float3(0.2f, 1.f, 0.101f));
+		}
+
+		drawWireframe || App->renderer3D->wireframeMode ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		//--Enable States--//
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		//-- Buffers--//
+		glBindBuffer(GL_ARRAY_BUFFER, this->textureBufferId);
+		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+		glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferId);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);
+
+		if (ComponentMaterial* material = owner->GetComponent<ComponentMaterial>())
+		{
+			drawWireframe || !App->renderer3D->useTexture || App->renderer3D->wireframeMode ? 0 : glBindTexture(GL_TEXTURE_2D, material->GetTextureId());
+		}
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indexBufferId);
+
+		//-- Draw --//
+		glPushMatrix();
+		glMultMatrixf(owner->transform->transformMatrix.Transposed().ptr());
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glDrawElements(GL_TRIANGLES, this->numIndices, GL_UNSIGNED_INT, NULL);
+		glPopMatrix();
+		//-- UnBind Buffers--//
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		//--Disables States--//
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		App->renderer3D->wireframeMode ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		if (drawFaceNormals || drawVertexNormals)
+			DrawNormals();
 	}
-	
-	//if esta dentro de la camera (OOBB AABB)
-	drawWireframe || App->renderer3D->wireframeMode ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	//--Enable States--//
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	//-- Buffers--//
-	glBindBuffer(GL_ARRAY_BUFFER, this->textureBufferId);
-	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
-
-	glBindBuffer(GL_ARRAY_BUFFER, this->vertexBufferId);
-	glVertexPointer(3, GL_FLOAT, 0, NULL);
-
-	if (ComponentMaterial* material = owner->GetComponent<ComponentMaterial>())
-	{	
-		drawWireframe || !App->renderer3D->useTexture || App->renderer3D->wireframeMode ? 0 : glBindTexture(GL_TEXTURE_2D, material->GetTextureId());
-	}
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->indexBufferId);
-
-	//-- Draw --//
-	glPushMatrix();
-	glMultMatrixf(owner->transform->transformMatrix.Transposed().ptr());
-	glColor3f(1.0f, 1.0f, 1.0f);
-	glDrawElements(GL_TRIANGLES, this->numIndices, GL_UNSIGNED_INT, NULL);
-	glPopMatrix();
-	//-- UnBind Buffers--//
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_TEXTURE_COORD_ARRAY, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	//--Disables States--//
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	
-	App->renderer3D->wireframeMode ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-	if (drawFaceNormals || drawVertexNormals)
-		DrawNormals();
 
 	return true;
 }
@@ -277,6 +292,8 @@ void ComponentMesh::OnGui()
 		ImGui::Text("Num vertices %d", numVertices);
 		ImGui::Text("Num faces %d", numIndices / 3);
 		ImGui::Checkbox("Wireframe", &drawWireframe);
+		ImGui::Checkbox("ShowBoxAABB", &showAABB);
+		ImGui::Checkbox("ShowBoxOBB", &showOBB);
 		ImGui::DragFloat("Normal draw scale", &normalScale);
 		ImGui::Checkbox("Draw face normals", &drawFaceNormals);
 		ImGui::Checkbox("Draw vertex normals", &drawVertexNormals);
