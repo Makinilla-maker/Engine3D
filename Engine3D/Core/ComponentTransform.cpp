@@ -106,6 +106,6 @@ void ComponentTransform::RecomputeGlobalMatrix()
 		transformMatrix = transformMatrixLocal;
 	}
 	// UpdateBoundingBoxes
-	if(owner->GetComponent<ComponentMesh>() != nullptr)	owner->GetComponent<ComponentMesh>()->GenerateGlobalBounds();
-	
+	if (owner->GetComponent<ComponentMesh>() != nullptr)	owner->GetComponent<ComponentMesh>()->GenerateGlobalBounds(transformMatrix);
+		
 }

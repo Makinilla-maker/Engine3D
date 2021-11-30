@@ -74,7 +74,7 @@ void ComponentMesh::CopyParMesh(par_shapes_mesh* parMesh)
 	GenerateBuffers();
 	ComputeNormals();
 	GenerateBounds();
-	GenerateGlobalBounds();
+	GenerateGlobalBounds(owner->parent->transform->transformMatrixLocal);
 }
 
 
@@ -131,10 +131,10 @@ void ComponentMesh::GenerateBounds()
 	localAABB.Enclose(&vertices[0], vertices.size());
 }
 
-void ComponentMesh::GenerateGlobalBounds()
+void ComponentMesh::GenerateGlobalBounds(float4x4 trans)
 {
 	globalOBB = localAABB;
-	globalOBB.Transform(owner->parent->transform->transformMatrixLocal);
+	globalOBB.Transform(trans);
 
 	// Generate global AABB
 	globalAABB.SetNegativeInfinity();

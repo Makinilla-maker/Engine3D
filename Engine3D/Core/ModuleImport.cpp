@@ -152,7 +152,7 @@ bool ModuleImport::LoadGeometry(const char* path) {
 			mesh->GenerateBounds();
 			mesh->ComputeNormals();
 			
-			mesh->GenerateGlobalBounds();
+			mesh->GenerateGlobalBounds(newGameObject->parent->transform->transformMatrixLocal);
 			
 		}
 		aiReleaseImport(scene);		

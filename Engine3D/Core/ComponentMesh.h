@@ -28,7 +28,7 @@ public:
 	void GenerateBuffers();
 	void ComputeNormals();
 	void GenerateBounds();
-	void GenerateGlobalBounds();
+	void GenerateGlobalBounds(float4x4 trans);
 	bool IsCameraSeenIt(Frustum* camFrustum);
 	void DrawNormals() const;
 	float3 GetCenterPointInWorldCoords() const;
