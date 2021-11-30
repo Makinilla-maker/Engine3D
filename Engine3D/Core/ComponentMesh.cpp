@@ -127,18 +127,8 @@ void ComponentMesh::ComputeNormals()
 
 void ComponentMesh::GenerateBounds()
 {
-	
 	localAABB.SetNegativeInfinity();
 	localAABB.Enclose(&vertices[0], vertices.size());
-		
-	Sphere sphere;	
-	sphere.r = 0.f;
-	sphere.pos = localAABB.CenterPoint();
-	sphere.Enclose(localAABB);
-
-	radius = sphere.r;
-	centerPoint = sphere.pos;
-
 }
 
 void ComponentMesh::GenerateGlobalBounds()

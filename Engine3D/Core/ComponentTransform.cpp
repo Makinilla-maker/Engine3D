@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "ModuleScene.h"
 #include "ComponentCamera.h"
+#include "ComponentMesh.h"
 #include "glew.h"
 #include "ImGui/imgui.h"
 
@@ -104,4 +105,7 @@ void ComponentTransform::RecomputeGlobalMatrix()
 	{
 		transformMatrix = transformMatrixLocal;
 	}
+	// UpdateBoundingBoxes
+	if(owner->GetComponent<ComponentMesh>() != nullptr)	owner->GetComponent<ComponentMesh>()->GenerateGlobalBounds();
+	
 }
