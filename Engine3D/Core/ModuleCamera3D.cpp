@@ -61,18 +61,22 @@ update_status ModuleCamera3D::Update(float dt)
 	{
 		if(App->editor->gameobjectSelected != nullptr)
 		{			
+			float3 center = App->editor->gameobjectSelected->transform->GetPosition();
 			if (ComponentMesh* mesh = App->editor->gameobjectSelected->GetComponent<ComponentMesh>())
 			{
-				const float3 meshCenter = mesh->GetCenterPointInWorldCoords();
-				LookAt(meshCenter);
-				const float meshRadius = mesh->GetSphereRadius();
-				const float currentDistance = meshCenter.Distance(position);
-				const float desiredDistance = (meshRadius * 2) / atan(cameraFrustum.horizontalFov);
-				position = position + front * (currentDistance - desiredDistance);
+				const AABB* box;
+				box = &mesh->globalAABB;
+				center = box->Centroid();
+				float3 size = box->Size();
+
+				position = float3(center.x + size.x, center.y + size.y, center.z + size.z*-1.2f);
+				LookAt(center);
+
 			}
 			else
 			{
-				LookAt(App->editor->gameobjectSelected->transform->GetPosition());
+				position = float3(center.x + 3, center.y + 3, center.z + 3);
+				LookAt(center);
 			}
 		}
 	}
@@ -95,8 +99,6 @@ update_status ModuleCamera3D::Update(float dt)
 	// Mouse Picking
 
 
-	//
-
 	// Mouse motion ----------------
 
 	bool hasRotated = false;
@@ -104,7 +106,7 @@ update_status ModuleCamera3D::Update(float dt)
 	if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
 		int dx = -App->input->GetMouseXMotion();
-		int dy = -App->input->GetMouseYMotion();
+		int dy = App->input->GetMouseYMotion();
 
 		if (App->input->GetKey(SDL_SCANCODE_LALT) == KEY_REPEAT) {
 			if (App->editor->gameobjectSelected != nullptr)
@@ -112,7 +114,7 @@ update_status ModuleCamera3D::Update(float dt)
 				const float newDeltaX = (float)dx * cameraSensitivity;
 				const float newDeltaY = (float)dy * cameraSensitivity;
 
-				reference = App->editor->gameobjectSelected->transform->GetPosition();
+				reference = App->editor->gameobjectSelected->GetComponent<ComponentMesh>()->globalAABB.Centroid();
 				Quat orbitMat = Quat::RotateY(newDeltaX * .1f);								
 				
 				if (abs(up.y) < 0.3f) // Avoid gimball lock on up & down apex
