@@ -13,6 +13,7 @@
 #include "ModuleTextures.h"
 #include "ComponentMaterial.h"
 #include "ComponentMesh.h"
+#include "ComponentTransform.h"
 #include "ComponentCamera.h"
 
 //Tools
@@ -24,6 +25,8 @@
 #include "ImGui/imgui_internal.h"
 #include "glew.h"
 #include <gl/GL.h>
+#include <stack>
+#include <queue>
 
 ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -83,6 +86,7 @@ bool ModuleEditor::Start()
     ImGui_ImplSDL2_InitForOpenGL(App->window->window, App->renderer3D->context);
     
     CreateGridBuffer();
+    play = false;
 
 
 
@@ -445,7 +449,46 @@ void ModuleEditor::MenuBar() {
 
         if (ImGui::BeginMenu("Game State")) {
             if (ImGui::MenuItem("Play"))
+            {
+                std::queue<GameObject*> S;
+                for (GameObject* child : App->scene->root->children)
+                {
+                    S.push(child);
+                }
+                if (play == false)
+                {
+                    while (!S.empty())
+                    {
+                        GameObject* go = S.front();
+                        S.pop();
+                        //Guardar todos los elementos antes de que haga play
+                        go->GetComponent<ComponentTransform>()->transformMatrixPlay = go->GetComponent<ComponentTransform>()->transformMatrixLocal;
+                        ////////
+                        for (GameObject* child : go->children)
+                        {
+                            S.push(child);
+                        }
+                        
+                    }
+                }
+                else
+                {
+                    while (!S.empty())
+                    {
+                        GameObject* go = S.front();
+                        S.pop();
+                        //Guardar todos los elementos antes de que haga play
+                        go->GetComponent<ComponentTransform>()->transformMatrixLocal = go->GetComponent<ComponentTransform>()->transformMatrixPlay;
+                        go->GetComponent<ComponentTransform>()->RecomputeGlobalMatrix();
+                        for (GameObject* child : go->children)
+                        {
+                            S.push(child);
+                        }
+                        
+                    }
+                }
                 play = !play;
+            }
             ImGui::EndMenu();
         }
 

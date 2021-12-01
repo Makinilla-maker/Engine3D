@@ -145,7 +145,7 @@ void ComponentMesh::GenerateGlobalBounds(float4x4 trans)
 }
 bool ComponentMesh::IsCameraSeenIt(Frustum* camFrustum, bool IsPlaying)
 {
-	if (IsPlaying)	return true;
+	if (!IsPlaying)	return true;
 	float3 obb[8];
 	Plane frustum[6];
 

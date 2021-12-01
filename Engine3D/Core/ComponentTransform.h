@@ -32,6 +32,9 @@ public:
 	float4x4 transformMatrix;
 	float4x4 transformMatrixLocal;
 
+	/// Save variables
+	float4x4 transformMatrixPlay;
+
 private:
 	
 	bool isDirty = false;
