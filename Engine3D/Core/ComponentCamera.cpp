@@ -65,7 +65,13 @@ bool ComponentCamera::PostUpdate(float dt)
 
 void ComponentCamera::OnGui()
 {
-	ImGui::CollapsingHeader("Camera");
+	if(ImGui::CollapsingHeader("Camera"))
+	{
+		ImGui::DragFloat3("Near Distance", &frustrum.nearPlaneDistance,0.2,0.1,500);
+		ImGui::DragFloat3("Far Distance", &frustrum.farPlaneDistance,0.2,0.1);
+		
+	}
+
 }
 
 void ComponentCamera::RecalculateProjection()
