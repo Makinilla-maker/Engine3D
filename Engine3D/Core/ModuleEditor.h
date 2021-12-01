@@ -63,6 +63,7 @@ public:
 	bool showTextures;
 	bool showConsoleWindow;
 	bool showAssetsWindow;
+	bool play;
 
 	ImGuiTextBuffer consoleText;
 

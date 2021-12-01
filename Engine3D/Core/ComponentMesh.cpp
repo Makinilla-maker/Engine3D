@@ -4,8 +4,11 @@
 #include "SDL/include/SDL_opengl.h"
 #include "Application.h"
 #include "ModuleRenderer3D.h"
+#include "ModuleScene.h"
 #include "ModuleCamera3D.h"
+#include "ModuleEditor.h"
 #include "ComponentMaterial.h"
+#include "ComponentCamera.h"
 #include "ComponentTransform.h"
 #include "GameObject.h"
 #include "ImGui/imgui.h"
@@ -140,8 +143,9 @@ void ComponentMesh::GenerateGlobalBounds(float4x4 trans)
 	globalAABB.SetNegativeInfinity();
 	globalAABB.Enclose(globalOBB);
 }
-bool ComponentMesh::IsCameraSeenIt(Frustum* camFrustum)
+bool ComponentMesh::IsCameraSeenIt(Frustum* camFrustum, bool IsPlaying)
 {
+	if (IsPlaying)	return true;
 	float3 obb[8];
 	Plane frustum[6];
 
@@ -212,7 +216,7 @@ float3 ComponentMesh::GetCenterPointInWorldCoords() const
 
 bool ComponentMesh::Update(float dt)
 {
-	if (IsCameraSeenIt(&App->camera->cameraFrustum))
+	if (IsCameraSeenIt(&App->scene->cameraGame->GetComponent<ComponentCamera>()->GetCamera(),App->editor->play))
 	{
 		
 

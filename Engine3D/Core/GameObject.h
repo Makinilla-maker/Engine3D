@@ -42,6 +42,10 @@ public:
 	void RemoveChild(GameObject* child);
 	bool FindComponent(Component* component);
 	void PropagateTransform();
+	bool IsActive() 
+	{
+		return active;
+	}
 
 	std::string name;
 	GameObject* parent = nullptr;

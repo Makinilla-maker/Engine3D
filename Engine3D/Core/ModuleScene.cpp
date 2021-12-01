@@ -108,7 +108,7 @@ update_status ModuleScene::Update(float dt)
 				S.push(child);
 			}
 		}
-		App->editor->DrawGrid();
+		//App->editor->DrawGrid();
 		cameraGame->GetComponent<ComponentCamera>()->PostUpdate(dt);
 	}
 

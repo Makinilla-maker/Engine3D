@@ -29,7 +29,7 @@ public:
 	void ComputeNormals();
 	void GenerateBounds();
 	void GenerateGlobalBounds(float4x4 trans);
-	bool IsCameraSeenIt(Frustum* camFrustum);
+	bool IsCameraSeenIt(Frustum* camFrustum, bool IsPlaying);
 	void DrawNormals() const;
 	float3 GetCenterPointInWorldCoords() const;
 	inline float GetSphereRadius() const { return radius; }

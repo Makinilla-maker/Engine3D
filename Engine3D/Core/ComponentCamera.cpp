@@ -67,17 +67,19 @@ void ComponentCamera::OnGui()
 {
 	if(ImGui::CollapsingHeader("Camera"))
 	{
-		ImGui::DragFloat3("Near Distance", &frustrum.nearPlaneDistance,0.2,0.1,500);
-		ImGui::DragFloat3("Far Distance", &frustrum.farPlaneDistance,0.2,0.1);
-		
+		ImGui::DragFloat("Near Distance", &frustrum.nearPlaneDistance,0.2,0.1,500);
+		ImGui::DragFloat("Far Distance", &frustrum.farPlaneDistance,0.2,0.1);
+		if(ImGui::DragFloat("Vertical FOV", &FOV, 0.2, 0.1)) 
+		{
+			RecalculateProjection();
+		}
 	}
-
 }
 
 void ComponentCamera::RecalculateProjection()
 {
 	frustrum.type = FrustumType::PerspectiveFrustum;
-	frustrum.verticalFov = (verticalFOV * 3.141592 / 2) / 180.f;
+	frustrum.verticalFov = (FOV * 3.141592 / 2) / 180.f;
 	frustrum.horizontalFov = 2.f * atanf(tanf(frustrum.verticalFov * 0.5f) * aspectRatio);
 }
 void ComponentCamera::LookAt(const float3& point)

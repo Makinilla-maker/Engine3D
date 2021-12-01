@@ -17,11 +17,15 @@ public:
 
 	bool Start();
 	
-	bool Update(float dt) override;
 	bool PreUpdate(float dt);
+	bool Update(float dt) override;
 	bool PostUpdate(float dt);
 	void RecalculateProjection();
 	void LookAt(const float3& point);
+	Frustum GetCamera()
+	{
+		return frustrum;
+	}
 
 	void OnGui() override;
 
@@ -35,6 +39,6 @@ private:
 
 	Frustum frustrum;
 	float4x4 viewMatrix;
-	float verticalFOV = 60.f;
+	float FOV = 60.f;
 	float aspectRatio = 1.f;
 };

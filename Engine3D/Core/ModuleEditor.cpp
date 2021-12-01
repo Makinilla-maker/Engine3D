@@ -443,6 +443,12 @@ void ModuleEditor::MenuBar() {
             ImGui::EndMenu();
         }
 
+        if (ImGui::BeginMenu("Game State")) {
+            if (ImGui::MenuItem("Play"))
+                play = !play;
+            ImGui::EndMenu();
+        }
+
     }
 
     ImGui::EndMainMenuBar();
