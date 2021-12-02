@@ -26,6 +26,10 @@ public:
 	{
 		return frustrum;
 	}
+	void SetAspectRadio(float asprat)
+	{
+		aspectRatio = asprat;
+	}
 
 	void OnGui() override;
 

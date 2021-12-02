@@ -665,12 +665,12 @@ void ModuleEditor::UpdateWindowStatus() {
     }
 
     if (showGameWindow) {
-        ImGui::Begin("Game", &showGameWindow, ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar);
+        ImGui::Begin("Game", &showGameWindow, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
         ImVec2 viewportSize = ImGui::GetCurrentWindow()->Size;
         if (viewportSize.x != lastViewportSize.x || viewportSize.y != lastViewportSize.y)
         {
-            App->camera->aspectRatio = viewportSize.x / viewportSize.y;
-            App->camera->RecalculateProjection();
+            App->scene->cameraGame->GetComponent<ComponentCamera>()->SetAspectRadio(viewportSize.x / viewportSize.y);
+            App->scene->cameraGame->GetComponent<ComponentCamera>()->RecalculateProjection();
         }
         lastViewportSize = viewportSize;
         ImGui::Image((ImTextureID)App->scene->cameraGame->GetComponent<ComponentCamera>()->viewPortGame.texture, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
@@ -679,7 +679,7 @@ void ModuleEditor::UpdateWindowStatus() {
 
     if (showSceneWindow) {
 
-        ImGui::Begin("Scene", &showSceneWindow, ImGuiWindowFlags_NoScrollbar);
+        ImGui::Begin("Scene", &showSceneWindow, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
         ImVec2 viewportSize = ImGui::GetCurrentWindow()->Size;
         if (viewportSize.x != lastViewportSize.x || viewportSize.y != lastViewportSize.y)

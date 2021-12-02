@@ -141,7 +141,7 @@ void ComponentMesh::GenerateGlobalBounds(float4x4 trans)
 	globalAABB.SetNegativeInfinity();
 	globalAABB.Enclose(globalOBB);
 }
-bool ComponentMesh::IsCameraSeenIt(Frustum* camFrustum, bool IsPlaying)
+bool ComponentMesh::FrustrumCulling(Frustum* _frustum, bool IsPlaying)
 {
 	if (!IsPlaying)	return true;
 	float3 obb[8];
@@ -149,15 +149,15 @@ bool ComponentMesh::IsCameraSeenIt(Frustum* camFrustum, bool IsPlaying)
 
 	int totalIn = 0;
 
-	camFrustum->GetPlanes(frustum);
+	_frustum->GetPlanes(frustum);
 	globalAABB.GetCornerPoints(obb);
 
-	for (size_t i = 0; i < 6; i++)
+	for (int i = 0; i < 6; i++)
 	{
 		int inCount = 8;
 		int iPtIn = 1;
 
-		for (size_t k = 0; k < 8; k++)
+		for (int k = 0; k < 8; k++)
 		{
 			if (frustum[i].IsOnPositiveSide(obb[k]))
 			{
@@ -171,7 +171,7 @@ bool ComponentMesh::IsCameraSeenIt(Frustum* camFrustum, bool IsPlaying)
 		}
 	}
 
-	if (totalIn == 6)
+	if (totalIn == 5)
 		return true;
 
 	return true;
@@ -214,9 +214,8 @@ float3 ComponentMesh::GetCenterPointInWorldCoords() const
 
 bool ComponentMesh::Update(float dt)
 {
-	if (IsCameraSeenIt(&App->scene->cameraGame->GetComponent<ComponentCamera>()->GetCamera(),App->editor->play))
+	if (FrustrumCulling(&App->scene->cameraGame->GetComponent<ComponentCamera>()->GetCamera(), App->editor->play))
 	{
-		
 
 		DrawAABBOBB();
 		
@@ -281,7 +280,7 @@ void ComponentMesh::OnGui()
 		ImGui::Checkbox("Draw vertex normals", &drawVertexNormals);
 	}
 }
-void ComponentMesh::DrawBounds(float3* points, float3 color)
+void ComponentMesh::DrawBounds(float3* p, float3 color)
 {
 	glColor3fv(&color.x);
 	glLineWidth(2.f);
@@ -295,7 +294,7 @@ void ComponentMesh::DrawBounds(float3* points, float3 color)
 	};
 	for (const auto& i : ind)
 	{
-		glVertex3fv(&points[i].x);
+		glVertex3fv(&p[i].x);
 	}
 
 	glEnd();
