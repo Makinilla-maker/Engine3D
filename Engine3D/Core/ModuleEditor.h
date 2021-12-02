@@ -79,5 +79,5 @@ public:
 
 	ImVec2 mouse_pos;
 
-	float4 SceneWindow;
+	//float4 SceneWindow;
 };

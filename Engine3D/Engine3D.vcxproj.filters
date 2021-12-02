@@ -185,7 +185,7 @@
     <ClCompile Include="Core\ComponentCamera.cpp">
       <Filter>Engine\GameObjects - Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Culverin-Engine3D-master\Engine\ImGui\imgui_dock_v2.cpp">
+    <ClCompile Include="Core\ImGui\parson.cpp">
       <Filter>ExternalLibraries\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
@@ -718,7 +718,7 @@
     <ClInclude Include="Core\ComponentCamera.h">
       <Filter>Engine\GameObjects - Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Culverin-Engine3D-master\Engine\ImGui\imgui_dock_v2.h">
+    <ClInclude Include="Core\ImGui\parson.h">
       <Filter>ExternalLibraries\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
