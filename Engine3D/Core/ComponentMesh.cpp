@@ -138,8 +138,6 @@ void ComponentMesh::GenerateGlobalBounds(float4x4 trans)
 {
 	globalOBB = localAABB;
 	globalOBB.Transform(trans);
-
-	// Generate global AABB
 	globalAABB.SetNegativeInfinity();
 	globalAABB.Enclose(globalOBB);
 }
@@ -220,18 +218,8 @@ bool ComponentMesh::Update(float dt)
 	{
 		
 
-		if (showAABB) {
-			float3 points[8];
-			globalAABB.GetCornerPoints(points);
-			App->renderer3D->DrawBox(points, float3(0.2f, 1.f, 0.101f));
-		}
-		if (showOBB)
-		{
-			float3 points[8];
-			globalOBB.GetCornerPoints(points);
-			App->renderer3D->DrawBox(points, float3(0.2f, 1.f, 0.101f));
-		}
-
+		DrawAABBOBB();
+		
 		drawWireframe || App->renderer3D->wireframeMode ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -292,6 +280,42 @@ void ComponentMesh::OnGui()
 		ImGui::Checkbox("Draw face normals", &drawFaceNormals);
 		ImGui::Checkbox("Draw vertex normals", &drawVertexNormals);
 	}
+}
+void ComponentMesh::DrawBounds(float3* points, float3 color)
+{
+	glColor3fv(&color.x);
+	glLineWidth(2.f);
+	glBegin(GL_LINES);
+
+	std::vector<int> ind =
+	{
+		0,2,2,6,6,4,4,0,
+		0,1,1,3,3,2,4,5,
+		6,7,5,7,3,7,1,5,
+	};
+	for (const auto& i : ind)
+	{
+		glVertex3fv(&points[i].x);
+	}
+
+	glEnd();
+	glLineWidth(1.f);
+	glColor3f(1.f, 1.f, 1.f);
+}
+void ComponentMesh::DrawAABBOBB()
+{
+	if (showAABB) {
+		float3 points[8];
+		globalAABB.GetCornerPoints(points);
+		DrawBounds(points, float3(0.5f, 0.8f, 0.10f));
+	}
+	if (showOBB)
+	{
+		float3 points[8];
+		globalOBB.GetCornerPoints(points);
+		DrawBounds(points, float3(0.2f, 1.f, 0.101f));
+	}
+
 }
 
 

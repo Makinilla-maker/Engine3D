@@ -463,6 +463,7 @@ void ModuleEditor::MenuBar() {
                         S.pop();
                         //Guardar todos los elementos antes de que haga play
                         go->GetComponent<ComponentTransform>()->transformMatrixPlay = go->GetComponent<ComponentTransform>()->transformMatrixLocal;
+                        //go->GetComponent<ComponentMaterial>()-> = go->GetComponent<ComponentMaterial>()->;
                         ////////
                         for (GameObject* child : go->children)
                         {

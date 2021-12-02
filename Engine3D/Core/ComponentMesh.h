@@ -37,6 +37,10 @@ public:
 	bool Update(float dt) override;
 	void OnGui() override;
 
+	void DrawBounds(float3* points, float3 color);
+
+	void DrawAABBOBB();
+
 	uint vertexBufferId = 0, indexBufferId = 0, textureBufferId = 0;
 	std::string texturePath;
 	

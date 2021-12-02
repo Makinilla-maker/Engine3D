@@ -25,10 +25,6 @@ public:
 	void OnSave(JSONWriter& writer) const override;
 	void DrawingModes(bool currentState, int glMode);
 
-	void DrawBox(float3* points, float3 color);
-
-	
-
 public:
 
 	Light lights[MAX_LIGHTS];
