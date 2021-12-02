@@ -1,6 +1,9 @@
 #pragma once
 #include "Module.h"
 
+#include "ComponentMesh.h"
+#include "ComponentMaterial.h"
+
 #include <string>
 
 class ComponentMesh;
@@ -19,6 +22,9 @@ public:
 	bool LoadGeometry(const char* path);
 
 	void FindNodeName(const aiScene* scene, const size_t i, std::string& name);
+
+	uint64 Save(const ComponentMesh* mesh, const char* name);
+	void Load(const char* name);
 
 
 };

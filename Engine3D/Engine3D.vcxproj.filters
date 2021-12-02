@@ -179,9 +179,6 @@
     <ClCompile Include="Core\Application.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Core\MaterialImporter.cpp">
-      <Filter>Engine\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="Core\ComponentCamera.cpp">
       <Filter>Engine\GameObjects - Components</Filter>
     </ClCompile>
@@ -711,9 +708,6 @@
     </ClInclude>
     <ClInclude Include="Core\Application.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\MaterialImporter.h">
-      <Filter>Engine\Modules</Filter>
     </ClInclude>
     <ClInclude Include="Core\ComponentCamera.h">
       <Filter>Engine\GameObjects - Components</Filter>
