@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Culverin-Engine3D-master\Engine\ImGui\imgui_dock_v2.cpp" />
     <ClCompile Include="Core\Application.cpp" />
     <ClCompile Include="Core\Color.cpp" />
     <ClCompile Include="Core\ComponentCamera.cpp" />
@@ -75,6 +76,7 @@
     <ClCompile Include="Core\ModuleViewportFrameBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Culverin-Engine3D-master\Engine\ImGui\imgui_dock_v2.h" />
     <ClInclude Include="Core\Application.h" />
     <ClInclude Include="Core\Assimp\include\ai_assert.h" />
     <ClInclude Include="Core\Assimp\include\anim.h" />

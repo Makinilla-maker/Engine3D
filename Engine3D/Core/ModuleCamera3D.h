@@ -15,6 +15,7 @@ public:
 	update_status Update(float dt)override;
 	bool CleanUp() override;
 
+	void MousePick(float x, float y, float w, float h);
 	void LookAt(const float3&point);
 	void CalculateViewMatrix();
 	void RecalculateProjection();

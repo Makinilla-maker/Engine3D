@@ -97,6 +97,8 @@ update_status ModuleCamera3D::Update(float dt)
 	position += newPos;
 	if (!newPos.Equals(float3::zero)) CalculateViewMatrix();
 	// Mouse Picking
+	
+	//LALA
 
 
 	// Mouse motion ----------------
@@ -169,6 +171,11 @@ update_status ModuleCamera3D::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
+
+void ModuleCamera3D::MousePick(float x, float y, float w, float h)
+{
+
+}
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::LookAt(const float3& point)

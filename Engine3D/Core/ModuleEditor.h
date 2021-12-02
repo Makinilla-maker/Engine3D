@@ -77,4 +77,7 @@ public:
 	
 	ModuleViewportFrameBuffer viewPortScene;
 
+	ImVec2 mouse_pos;
+
+	float4 SceneWindow;
 };
