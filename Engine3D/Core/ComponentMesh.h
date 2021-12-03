@@ -29,7 +29,7 @@ public:
 	void ComputeNormals();
 	void GenerateBounds();
 	void GenerateGlobalBounds(float4x4 trans);
-	bool FrustrumCulling(Frustum* camFrustum, bool IsPlaying);
+	bool FrustrumCulling(Frustum* _frustum, bool IsPlaying);
 	void DrawNormals() const;
 	float3 GetCenterPointInWorldCoords() const;
 	inline float GetSphereRadius() const { return radius; }
@@ -37,7 +37,7 @@ public:
 	bool Update(float dt) override;
 	void OnGui() override;
 
-	void DrawBounds(float3* points, float3 color);
+	void DrawBounds(float3* p, float3 color);
 
 	void DrawAABBOBB();
 
