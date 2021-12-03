@@ -130,12 +130,12 @@ update_status ModuleInput::PreUpdate(float dt)
 			case SDL_DROPFILE:
 			{
 				filePath = event.drop.file;
-				App->fileSystem->SetNormalName(filePath);
 				std::string fileName(filePath);
+				fileName = App->fileSystem->NormalizePath(filePath);
 				if (fileName.substr(fileName.find_last_of(".")) == ".fbx" || fileName.substr(fileName.find_last_of(".")) == ".FBX" || fileName.substr(fileName.find_last_of(".")) == ".OBJ" || fileName.substr(fileName.find_last_of(".")) == ".obj")
 				{
 					LOG("Path of file dropped will be %s", filePath);
-					App->import->LoadGeometry(filePath);
+					App->import->LoadGeometry(fileName.c_str());
 				}
 				else if (fileName.substr(fileName.find_last_of(".")) == ".jpg" || fileName.substr(fileName.find_last_of(".")) == ".png" || fileName.substr(fileName.find_last_of(".")) == ".PNG" || fileName.substr(fileName.find_last_of(".")) == ".JPG")
 				{

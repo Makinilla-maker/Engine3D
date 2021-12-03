@@ -17,7 +17,7 @@ public:
 
 	bool Start();
 	
-	bool PreUpdate(float dt);
+	bool StartBuffer(float dt);
 	bool Update(float dt) override;
 	bool PostUpdate(float dt);
 	void RecalculateProjection();
@@ -33,9 +33,9 @@ public:
 
 	void OnGui() override;
 
-	unsigned int framebuffer;
+	/*unsigned int framebuffer;
 	unsigned int texColorBuffer;
-	unsigned int rbo;	
+	unsigned int rbo;	*/
 	ModuleViewportFrameBuffer viewPortGame;
 	bool movedCamera;
 

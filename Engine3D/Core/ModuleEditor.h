@@ -2,6 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "ModuleViewportFrameBuffer.h"
+#include "File.h"
 
 #include "ImGui/imgui.h"
 #include <string>
@@ -9,6 +10,7 @@
 //Forward declaration
 class GameObject;
 class ComponentTransform;
+class File;
 
 class ModuleEditor : public Module
 {
@@ -45,6 +47,8 @@ public:
 	void MenuBar();
 	void UpdateWindowStatus();
 
+	void Delete();
+
 	//Console Text Pushback
 	void UpdateText(const char* consoleText);
 
@@ -57,6 +61,7 @@ public:
 	bool showAboutWindow;
 	bool showConfWindow;
 	bool showInspectorWindow;
+	bool showResources;
 	bool showHierarchyWindow;
 	bool showSceneWindow;
 	bool showGameWindow;
@@ -73,11 +78,16 @@ public:
 
 	GameObject* gameobjectSelected;
 
-	ImVec2 lastViewportSize;
+	ImVec2 lastViewportSizeScene;
+	ImVec2 lastViewportSizeGame;
 	
 	ModuleViewportFrameBuffer viewPortScene;
 
 	ImVec2 mouse_pos;
+
+	float freq = 0.f;
+	File* file;
+	File* select;
 
 	//float4 SceneWindow;
 };

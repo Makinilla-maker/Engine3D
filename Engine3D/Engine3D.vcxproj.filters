@@ -185,6 +185,9 @@
     <ClCompile Include="Core\ImGui\parson.cpp">
       <Filter>ExternalLibraries\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Core\File.cpp">
+      <Filter>Engine\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\ImGui\imconfig.h">
@@ -714,6 +717,9 @@
     </ClInclude>
     <ClInclude Include="Core\ImGui\parson.h">
       <Filter>ExternalLibraries\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\File.h">
+      <Filter>Engine\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

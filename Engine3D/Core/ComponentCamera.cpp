@@ -14,7 +14,6 @@ ComponentCamera::ComponentCamera(GameObject* parent) : Component(parent)
 	frustrum.front = owner->transform->GetForward();
 	frustrum.up = owner->transform->GetUp();
 	frustrum.verticalFov = 60.0f * DEGTORAD;
-	frustrum.horizontalFov = 2.0f * atanf(tanf(frustrum.verticalFov / 2) * (16.f / 9.f));
 }
 
 ComponentCamera::~ComponentCamera()
@@ -45,7 +44,7 @@ bool ComponentCamera::Update(float dt)
 	return true;
 }
 
-bool ComponentCamera::PreUpdate(float dt)
+bool ComponentCamera::StartBuffer(float dt)
 {
 	viewPortGame.PreUpdate(dt);
 	glLoadIdentity();

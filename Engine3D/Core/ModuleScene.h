@@ -5,9 +5,10 @@
 #include "Globals.h"
 #include "ModuleImport.h"
 #include "Geometry/Frustum.h"
-
-
 #include "GameObject.h"
+
+class File;
+
 class ModuleScene : public Module
 {
 public:
@@ -26,5 +27,6 @@ public:
 	
 	GameObject* root;
 	GameObject* cameraGame;
+	File* assetFile;
 	
 };

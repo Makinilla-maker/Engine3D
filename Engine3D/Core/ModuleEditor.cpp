@@ -15,6 +15,8 @@
 #include "ComponentMesh.h"
 #include "ComponentTransform.h"
 #include "ComponentCamera.h"
+#include "File.h"
+#include "ModuleFileSystem.h"
 
 //Tools
 #include <string>
@@ -36,6 +38,7 @@ ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, s
     showAnotherWindow = false;
     showAboutWindow = false;
     showConfWindow = true;
+    showResources = true;
 
     showConsoleWindow = true;
     showAssetsWindow = true;
@@ -48,6 +51,8 @@ ModuleEditor::ModuleEditor(Application* app, bool start_enabled) : Module(app, s
     currentColor = { 1.0f, 1.0f, 1.0f, 1.0f };
     
     gameobjectSelected = nullptr;
+
+    select = nullptr;
 }
 
 
@@ -119,6 +124,14 @@ update_status ModuleEditor::Update(float dt)
     {
         gameobjectSelected->parent->RemoveChild(gameobjectSelected);
         //App->import->Load("BakerHouse.huevos");
+    }
+    
+    freq += 0.5f * dt;
+    if (freq >= 1.0f)
+    {
+        App->scene->assetFile->childs.clear();
+        App->scene->assetFile->Read();
+        freq = 0.0f;
     }
 
     //Update status of each window and shows ImGui elements
@@ -520,6 +533,61 @@ void ModuleEditor::UpdateWindowStatus() {
         ImGui::End();
 
     }
+    if (showResources)
+    {
+        ImGui::Begin("Assets List", &showResources);
+
+        std::stack<File*> S;
+        std::stack<uint> indents;
+        std::stack<std::string> files;
+
+        S.push(App->scene->assetFile);
+        indents.push(0);
+
+        while (!S.empty())
+        {
+            file = S.top();
+            uint max = indents.top();
+            S.pop();
+            indents.pop();
+
+            ImGuiTreeNodeFlags nodeFlags = 0;
+            if (file->childs.size() == 0)   nodeFlags |= ImGuiTreeNodeFlags_Leaf;
+            if (file->selected)  nodeFlags |= ImGuiTreeNodeFlags_Selected;
+            
+            for (uint i = 0; i < max; ++i)
+            {
+                ImGui::Indent();
+            }
+
+            if (ImGui::TreeNodeEx(file->name.c_str(), nodeFlags))
+            {
+                if (ImGui::IsItemClicked())
+                {
+                    select ? select->selected = !select->selected : 0;
+                    select = file;
+                    select->selected = !select->selected;
+                }
+                if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && select != nullptr)
+                {
+                    Delete();
+                }
+                for (File* child : file->childs)
+                {
+                    S.push(child);
+                    indents.push(max + 1);
+                }
+
+                for (uint i = 0; i < max; ++i)
+                {
+                    ImGui::Unindent();
+                }
+
+                ImGui::TreePop();
+            }
+        }
+        ImGui::End();
+    }
     if (showTextures)
     {
         ImGui::Begin("Textures", &showTextures);
@@ -667,12 +735,12 @@ void ModuleEditor::UpdateWindowStatus() {
     if (showGameWindow) {
         ImGui::Begin("Game", &showGameWindow, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
         ImVec2 viewportSize = ImGui::GetCurrentWindow()->Size;
-        if (viewportSize.x != lastViewportSize.x || viewportSize.y != lastViewportSize.y)
+        if (viewportSize.x != lastViewportSizeGame.x || viewportSize.y != lastViewportSizeGame.y)
         {
             App->scene->cameraGame->GetComponent<ComponentCamera>()->SetAspectRadio(viewportSize.x / viewportSize.y);
             App->scene->cameraGame->GetComponent<ComponentCamera>()->RecalculateProjection();
         }
-        lastViewportSize = viewportSize;
+        lastViewportSizeGame = viewportSize;
         ImGui::Image((ImTextureID)App->scene->cameraGame->GetComponent<ComponentCamera>()->viewPortGame.texture, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::End();
     }
@@ -682,7 +750,7 @@ void ModuleEditor::UpdateWindowStatus() {
         ImGui::Begin("Scene", &showSceneWindow, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
         ImVec2 viewportSize = ImGui::GetCurrentWindow()->Size;
-        if (viewportSize.x != lastViewportSize.x || viewportSize.y != lastViewportSize.y)
+        if (viewportSize.x != lastViewportSizeScene.x || viewportSize.y != lastViewportSizeScene.y)
         {
             App->camera->aspectRatio = viewportSize.x / viewportSize.y;
 			App->camera->RecalculateProjection();
@@ -703,11 +771,25 @@ void ModuleEditor::UpdateWindowStatus() {
 			}
 		}*/
 		//
-        lastViewportSize = viewportSize;
+        lastViewportSizeScene = viewportSize;
         ImGui::Image((ImTextureID)viewPortScene.texture, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::End();
     }
     
+}
+
+void ModuleEditor::Delete()
+{
+    if (select->childs.size() > 0)
+    {
+        for (int i = 0; i < select->files.size(); i++)
+        {
+            std::string file = select->path + std::string(select->files.at(i));
+            App->fileSystem->DeleteDir(file.c_str());
+        }
+    }
+    App->fileSystem->DeleteDir(select->path.c_str());
+    select = nullptr;
 }
 
 void ModuleEditor::InspectorGameObject() 

@@ -10,6 +10,7 @@
 #include "ComponentCamera.h"
 #include "ComponentTransform.h"
 #include "Component.h"
+#include "File.h"
 #include <stack>
 #include <queue>
 
@@ -33,12 +34,15 @@ bool ModuleScene::Start()
 	LOG("Loading Intro assets");
 	
 	App->import->LoadGeometry("Assets/Models/BakerHouse.fbx");
-	App->import->LoadGeometry("Assets/Models/street2.fbx");
 
 	cameraGame->GetComponent<ComponentCamera>()->Start();
 
 	cameraGame->GetComponent<ComponentTransform>()->SetPosition(float3(0,3,-14));
 	cameraGame->GetComponent<ComponentCamera>()->LookAt(float3(0,0,0));
+
+	assetFile = new File("Assets");
+	assetFile->path = assetFile->name;
+	assetFile->Read();
 	
 	return true;
 }
@@ -92,7 +96,7 @@ update_status ModuleScene::Update(float dt)
 
 	if (cameraGame != nullptr)
 	{
-		cameraGame->GetComponent<ComponentCamera>()->PreUpdate(dt);
+		cameraGame->GetComponent<ComponentCamera>()->StartBuffer(dt);
 		std::queue<GameObject*> S;
 		for (GameObject* child : root->children)
 		{

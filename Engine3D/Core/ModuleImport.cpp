@@ -21,8 +21,6 @@
 #include "Assimp/include/postprocess.h"
 #include "Assimp/include/mesh.h"
 
-#include <fstream>
-
 
 ModuleImport::ModuleImport(Application* app, bool start_enabled) : Module(app, start_enabled) {}
 
@@ -77,7 +75,7 @@ bool ModuleImport::LoadGeometry(const char* path) {
 	if (scene != nullptr && scene->HasMeshes()) {
 		//Use scene->mNumMeshes to iterate on scene->mMeshes array
 		for (size_t i = 0; i < scene->mNumMeshes; i++)
-		{		
+		{
 			bool nameFound = false;
 			std::string name;
 			FindNodeName(scene, i, name);
@@ -85,7 +83,7 @@ bool ModuleImport::LoadGeometry(const char* path) {
 			GameObject* newGameObject = App->scene->CreateGameObject(name);
 			ComponentMesh* mesh = newGameObject->CreateComponent<ComponentMesh>();
 			assimpMesh = scene->mMeshes[i];
-			
+
 			if (scene->HasMaterials()) {
 				texture = scene->mMaterials[assimpMesh->mMaterialIndex];
 
@@ -96,10 +94,10 @@ bool ModuleImport::LoadGeometry(const char* path) {
 						mesh->texturePath = "Assets/Textures/" + new_path;
 						if (!App->textures->Find(mesh->texturePath))
 						{
-							const TextureObject& textureObject = App->textures->Load(mesh->texturePath);							
+							const TextureObject& textureObject = App->textures->Load(mesh->texturePath);
 							ComponentMaterial* materialComp = newGameObject->CreateComponent<ComponentMaterial>();
 							materialComp->SetTexture(textureObject);
-							
+
 						}
 						else
 						{
@@ -110,10 +108,10 @@ bool ModuleImport::LoadGeometry(const char* path) {
 					}
 				}
 			}
-	
+
 			mesh->numVertices = assimpMesh->mNumVertices;
 			mesh->vertices.resize(assimpMesh->mNumVertices);
-			
+
 			memcpy(&mesh->vertices[0], assimpMesh->mVertices, sizeof(float3) * assimpMesh->mNumVertices);
 			LOG("New mesh with %d vertices", assimpMesh->mNumVertices);
 
@@ -132,14 +130,14 @@ bool ModuleImport::LoadGeometry(const char* path) {
 					}
 				}
 			}
-			
+
 			// -- Copying Normals info --//
 			if (assimpMesh->HasNormals()) {
 
 				mesh->normals.resize(assimpMesh->mNumVertices);
 				memcpy(&mesh->normals[0], assimpMesh->mNormals, sizeof(float3) * assimpMesh->mNumVertices);
 			}
-			
+
 			// -- Copying UV info --//
 			if (assimpMesh->HasTextureCoords(0))
 			{
@@ -149,24 +147,17 @@ bool ModuleImport::LoadGeometry(const char* path) {
 					memcpy(&mesh->texCoords[j], &assimpMesh->mTextureCoords[0][j], sizeof(float2));
 				}
 			}
-			
+
 			mesh->GenerateBuffers();
 			mesh->GenerateBounds();
 			mesh->ComputeNormals();
-			
 			mesh->GenerateGlobalBounds(newGameObject->parent->transform->transformMatrixLocal);
-
-			std::string newName(path);
-			newName = newName.substr(newName.find_last_of("/") + 1);
-			newName = newName.substr(0, newName.find_first_of("."));
-			newName += ".huevos";
-			//Save(mesh, newName.c_str());
 		}
-		aiReleaseImport(scene);		
+		aiReleaseImport(scene);
 		RELEASE_ARRAY(buffer);
 
 	}
-	else 
+	else
 		LOG("Error loading scene %s", path);
 
 	RELEASE_ARRAY(buffer);
@@ -208,82 +199,4 @@ bool ModuleImport::CleanUp()
 	aiDetachAllLogStreams();
 
 	return true;
-}
-
-uint64 ModuleImport::Save(const ComponentMesh* mesh, const char* name)
-{
-	uint ranges[2] =
-	{
-		mesh->numIndices,
-		mesh->numVertices
-	};
-	uint size =
-		sizeof(ranges)
-		+ sizeof(uint) * mesh->numIndices
-		+ sizeof(float) * mesh->numVertices * 3;
-
-	char* buffer = new char[size];
-	char* cursor = buffer;
-
-	uint bytes = sizeof(ranges);
-	memcpy(cursor, ranges, bytes);
-	cursor += bytes;
-
-	bytes = sizeof(uint) * mesh->numIndices;
-	memcpy(cursor, &mesh->indices, bytes);
-	cursor += bytes;
-
-	bytes = sizeof(float3) * mesh->numVertices;
-	memcpy(cursor, &mesh->vertices, bytes);
-	cursor += bytes;
-
-	//texturePath
-	//numNormalFaces
-	//call GenerateBuffers?
-	//call ComputeNormals? etc
-	//AABB?
-
-	std::ofstream outfile(name, std::ofstream::binary);//bin?
-	outfile.write(buffer, size);
-	outfile.close();
-	delete[] buffer;
-
-	return uint64();//?
-}
-
-void ModuleImport::Load(const char* name)
-{
-	std::ifstream infile(name, std::ifstream::binary);//bin?
-	infile.seekg(0, infile.end);
-	long size = infile.tellg();
-	infile.seekg(0);
-	char* buffer = new char[size];
-	infile.read(buffer, size);
-	infile.close();
-
-	GameObject* newGameObject = App->scene->CreateGameObject(name);
-	ComponentMesh* mesh = newGameObject->CreateComponent<ComponentMesh>();
-
-	uint ranges[2];
-	char* cursor = buffer;
-
-	uint bytes = sizeof(ranges);
-	memcpy(ranges, cursor, bytes);
-	cursor += bytes;
-
-	mesh->numIndices = ranges[0];
-	bytes = sizeof(uint) * mesh->numIndices;
-	mesh->indices.resize(mesh->numIndices);
-	memcpy(&mesh->indices, cursor, bytes);
-	cursor += bytes;
-
-	mesh->numVertices = ranges[1];
-	bytes = sizeof(float3) * mesh->numVertices;
-	mesh->vertices.resize(mesh->numVertices);
-	memcpy(&mesh->vertices, cursor, bytes);
-	cursor += bytes;
-
-	mesh->GenerateBuffers();
-	mesh->GenerateBounds();
-	mesh->ComputeNormals();
 }

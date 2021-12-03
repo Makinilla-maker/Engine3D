@@ -12,11 +12,14 @@ struct aiFileIO;
 
 //struct BASS_FILEPROCS;
 class Config;
+class File;
 struct PathNode;
 
 class ModuleFileSystem : public Module
 {
 public:
+
+	File* file = nullptr;
 
 	ModuleFileSystem(Application* app, bool start_enabled = true);// const char* game_path = nullptr);
 
@@ -35,6 +38,7 @@ public:
 	bool AddPath(const char* path_or_zip);
 	bool Exists(const char* file) const;
 	bool CreateDir(const char* dir);
+	void DeleteDir(const char* dir);
 	bool IsDirectory(const char* file) const;
 	const char* GetWriteDir() const;
 	void DiscoverFiles(const char* directory, std::vector<std::string>& file_list, std::vector<std::string>& dir_list) const;

@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleFileSystem.h"
 #include "PathNode.h"
+#include "File.h"
 
 #include "PhysFS/include/physfs.h"
 #include <fstream>
@@ -166,6 +167,11 @@ bool ModuleFileSystem::CreateDir(const char* dir)
 		return true;
 	}
 	return false;
+}
+
+void ModuleFileSystem::DeleteDir(const char* dir)
+{
+	PHYSFS_delete(dir);
 }
 
 // Check if a file is a directory
@@ -562,3 +568,5 @@ std::string ModuleFileSystem::SetNormalName(const char* path) {
 	}
 	return new_name;
 }
+
+
