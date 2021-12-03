@@ -131,42 +131,38 @@ update_status ModuleInput::PreUpdate(float dt)
 			{
 				filePath = event.drop.file;
 				std::string fileName(filePath);
-				//if ()
+				App->fileSystem->SetNormalName(filePath);
+				if (fileName.substr(fileName.find_last_of(".")) == ".fbx" || fileName.substr(fileName.find_last_of(".")) == ".FBX" || fileName.substr(fileName.find_last_of(".")) == ".OBJ" || fileName.substr(fileName.find_last_of(".")) == ".obj")
 				{
-
-
-					if (fileName.substr(fileName.find_last_of(".")) == ".fbx" || fileName.substr(fileName.find_last_of(".")) == ".FBX" || fileName.substr(fileName.find_last_of(".")) == ".OBJ" || fileName.substr(fileName.find_last_of(".")) == ".obj")
+					LOG("Path of file dropped will be %s", filePath);
+					App->import->LoadGeometry(filePath);
+				}
+				else if (fileName.substr(fileName.find_last_of(".")) == ".jpg" || fileName.substr(fileName.find_last_of(".")) == ".png" || fileName.substr(fileName.find_last_of(".")) == ".PNG" || fileName.substr(fileName.find_last_of(".")) == ".JPG")
+				{
+					LOG("Path of file dropped will be %s", filePath);
+					std::string realFileName = fileName.substr(fileName.find_last_of("\\") + 1);
+					if (App->textures->Find(realFileName))
 					{
-						LOG("Path of file dropped will be %s", filePath);
-						App->import->LoadGeometry(filePath);
-					}
-					else if (fileName.substr(fileName.find_last_of(".")) == ".jpg" || fileName.substr(fileName.find_last_of(".")) == ".png" || fileName.substr(fileName.find_last_of(".")) == ".PNG" || fileName.substr(fileName.find_last_of(".")) == ".JPG")
-					{
-						LOG("Path of file dropped will be %s", filePath);
-						std::string realFileName = fileName.substr(fileName.find_last_of("\\") + 1);
-						if (App->textures->Find(realFileName))
+						TextureObject texture = App->textures->Get(realFileName);
+						if (App->editor->gameobjectSelected)
 						{
-							TextureObject texture = App->textures->Get(realFileName);
-							if (App->editor->gameobjectSelected)
+							if (ComponentMaterial* material = App->editor->gameobjectSelected->GetComponent<ComponentMaterial>())
 							{
-								if (ComponentMaterial* material = App->editor->gameobjectSelected->GetComponent<ComponentMaterial>())
-								{
-									material->SetTexture(texture);
-								}
-
+								material->SetTexture(texture);
 							}
+
 						}
-						else
+					}
+					else
+					{
+						TextureObject texture = App->textures->Load(realFileName);
+						if (App->editor->gameobjectSelected)
 						{
-							TextureObject texture = App->textures->Load(realFileName);
-							if (App->editor->gameobjectSelected)
+							if (ComponentMaterial* material = App->editor->gameobjectSelected->GetComponent<ComponentMaterial>())
 							{
-								if (ComponentMaterial* material = App->editor->gameobjectSelected->GetComponent<ComponentMaterial>())
-								{
-									material->SetTexture(texture);
-								}
-
+								material->SetTexture(texture);
 							}
+
 						}
 					}
 				}

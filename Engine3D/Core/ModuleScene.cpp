@@ -33,6 +33,7 @@ bool ModuleScene::Start()
 	LOG("Loading Intro assets");
 	
 	App->import->LoadGeometry("Assets/Models/BakerHouse.fbx");
+	App->import->LoadGeometry("Assets/Models/street2.fbx");
 
 	cameraGame->GetComponent<ComponentCamera>()->Start();
 
