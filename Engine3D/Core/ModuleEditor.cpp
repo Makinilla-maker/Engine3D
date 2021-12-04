@@ -82,7 +82,10 @@ bool ModuleEditor::Start()
     
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    //Put here the font u want
+    //Dalott font don't work :((
     io.Fonts->AddFontFromFileTTF("Assets/Fonts/Ruda-Bold.ttf", 14);
+
     sceneWindow |= ImGuiWindowFlags_NoScrollbar;
 
     // Setup ImGui style by default
