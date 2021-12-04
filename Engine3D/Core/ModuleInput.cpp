@@ -166,6 +166,10 @@ update_status ModuleInput::PreUpdate(float dt)
 						}
 					}
 				}
+				/*if (App->editor->select != nullptr)
+				{
+
+				}*/
 			};
 			SDL_free(&filePath);
 			break;

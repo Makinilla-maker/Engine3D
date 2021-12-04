@@ -82,10 +82,11 @@ bool ModuleEditor::Start()
     
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.Fonts->AddFontFromFileTTF("Assets/Fonts/Ruda-Bold.ttf", 14);
     sceneWindow |= ImGuiWindowFlags_NoScrollbar;
 
     // Setup ImGui style by default
-    ImGui::StyleColorsDark();
+    ImGui::StyleColorsClassic();
 
     // Setup Platform/Renderer bindings
 	ImGui_ImplOpenGL3_Init();
