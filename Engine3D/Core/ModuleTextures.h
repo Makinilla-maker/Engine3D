@@ -30,6 +30,9 @@ public:
 
 	bool Find(const std::string& path) const;
 
+	uint Save(TextureObject* texture, char** fileBuffer);
+
+
 	uint32 whiteFallback = 0, blackFallback = 0, checkers = 0;
 
 	std::map<const std::string, TextureObject> textures;

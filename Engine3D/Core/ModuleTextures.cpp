@@ -6,6 +6,7 @@
 #include "ModuleEditor.h"
 
 #include "glew.h"
+#include <fstream>
 // -- DevIL Image Library
 #include "DevIL\include\ilu.h"
 #include "DevIL\include\ilut.h"
@@ -183,5 +184,42 @@ bool ModuleTextures::Find(const std::string& path) const
 
 	return false;
 }
+
+uint ModuleTextures::Save(TextureObject* texture, char** fileBuffer)
+{
+	ILuint size;
+	ILubyte* data;
+
+	ilBindImage(texture->id);
+
+	ilSetInteger(IL_DXTC_DATA_FORMAT, IL_DXT5);
+	size = ilSaveL(IL_DDS, nullptr, 0);
+
+	if (size > 0)
+	{
+		data = new ILubyte[size];
+		if (ilSaveL(IL_DDS, data, size) > 0)
+			*fileBuffer = (char*)data;
+	}
+	else
+	{
+		ILenum error;
+		error = ilGetError();
+
+		if (error != IL_NO_ERROR)
+		{
+			LOG("Error when saving %s - %d: %s", texture->name, error, iluErrorString(error));
+		}
+	}
+
+	ilBindImage(0);
+	std::ofstream outfile("pito", std::ofstream::binary);//bin?
+	outfile.write(*fileBuffer, size);
+	outfile.close();
+
+	return size;
+}
+
+
 
 
