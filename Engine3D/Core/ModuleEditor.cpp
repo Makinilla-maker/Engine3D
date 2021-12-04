@@ -436,6 +436,8 @@ void ModuleEditor::MenuBar() {
                     ImGui::StyleColorsLight();
                 if (ImGui::MenuItem("Custom")) 
                     ImGui::StyleColorsCustom();
+                if (ImGui::MenuItem("Grey")) 
+                    ImGui::ApplyDefaultStyle();
                 ImGui::EndMenu();
             }
             ImGui::Separator();
@@ -478,6 +480,7 @@ void ModuleEditor::MenuBar() {
                 }
                 if (play == false)
                 {
+                    ImGui::ApplyDefaultStyle();
                     while (!S.empty())
                     {
                         GameObject* go = S.front();
@@ -495,6 +498,7 @@ void ModuleEditor::MenuBar() {
                 }
                 else
                 {
+                    ImGui::StyleColorsClassic();
                     while (!S.empty())
                     {
                         GameObject* go = S.front();
