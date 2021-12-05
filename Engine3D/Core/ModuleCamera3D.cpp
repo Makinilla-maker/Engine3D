@@ -3,9 +3,14 @@
 #include "ModuleCamera3D.h"
 #include "ModuleInput.h"
 #include "ModuleEditor.h"
+#include "ModuleRenderer3D.h"
+#include "ModuleScene.h"
 #include "ComponentTransform.h"
 #include "ComponentMesh.h"
 #include "GameObject.h"
+#include "Geometry/Triangle.h"
+#include <map>
+
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -21,6 +26,7 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 
 }
 
+// -----------------------------------------------------------------
 ModuleCamera3D::~ModuleCamera3D()
 {}
 
@@ -96,13 +102,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 	position += newPos;
 	if (!newPos.Equals(float3::zero)) CalculateViewMatrix();
-	// Mouse Picking
 	
-	//LALA
-
-
-	// Mouse motion ----------------
-
 	bool hasRotated = false;
 
 	if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
@@ -171,10 +171,83 @@ update_status ModuleCamera3D::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-
-void ModuleCamera3D::MousePick(float x, float y, float w, float h)
+// -----------------------------------------------------------------
+void ModuleCamera3D::MousePick()
 {
+	if (App->editor->gameobjectSelected != nullptr)
+		App->editor->gameobjectSelected->isSelected = false;
+	ImVec2 normalP(NormalizePick(ImGui::GetWindowPos(), ImGui::GetWindowSize(), ImGui::GetMousePos()));
+	LineSegment rayPick = cameraFrustum.UnProjectLineSegment(normalP.x, normalP.y);
+	RayCastPicking(rayPick);
+}
 
+// -----------------------------------------------------------------
+void ModuleCamera3D::RayCastPicking(const LineSegment& segment)
+{
+	std::map<float, GameObject*> objList;
+	float nearF = 0;
+	float farF = 0;
+
+	for (std::vector<GameObject*>::iterator i = App->scene->root->children.begin(); i != App->scene->root->children.end(); i++)
+	{
+		if ((*i)->name != "Camera")
+		{
+			math::AABB a = (*i)->GetComponent<ComponentMesh>()->globalAABB;
+			if (segment.Intersects(a, nearF, farF))
+				objList[nearF] = (*i);
+		}
+	}
+
+	std::map<float, GameObject*> dist;
+	for (auto i = objList.begin(); i != objList.end(); i++)
+	{
+		const ComponentMesh* mesh = (*i).second->GetComponent<ComponentMesh>();
+		if (mesh)
+		{
+			LineSegment local = segment;
+			local.Transform((*i).second->GetComponent<ComponentTransform>()->transformMatrix.Inverted());
+
+			if (mesh->numVertices >= 9)
+			{
+				for (uint j = 0; j < mesh->numIndices; j += 3)
+				{
+					float3 A(mesh->vertices.at(mesh->indices.at(j)));
+					float3 B(mesh->vertices.at(mesh->indices.at(j + 1)));
+					float3 C(mesh->vertices.at(mesh->indices.at(j + 2)));
+
+					float distance = 0;
+					if (local.Intersects(Triangle(A, B, C), &distance, nullptr))
+					{
+						dist[distance] = (*i).second;
+					}
+				}
+			}
+		}
+	}
+
+	objList.clear();
+	bool hit = false;
+	if (dist.begin() != dist.end())
+	{
+		App->editor->gameobjectSelected = (*dist.begin()).second;
+		hit = true;
+	}
+	dist.clear();
+	if (!hit) {
+		App->editor->gameobjectSelected = nullptr;
+	}
+}
+
+// -----------------------------------------------------------------
+ImVec2 ModuleCamera3D::NormalizePick(ImVec2 pos, ImVec2 size, ImVec2 mouse)
+{
+	ImVec2 normal;
+	float h = ImGui::GetFrameHeight();
+
+	normal.x = (((mouse.x - pos.x) / size.x) - 0.5f) / 0.5f;
+	normal.y = -((((mouse.y - (pos.y + h)) / (size.y - h)) - 0.5f) / 0.5f);
+
+	return normal;
 }
 
 // -----------------------------------------------------------------
@@ -188,8 +261,6 @@ void ModuleCamera3D::LookAt(const float3& point)
 
 	CalculateViewMatrix();
 }
-
-
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::CalculateViewMatrix()
@@ -205,6 +276,7 @@ void ModuleCamera3D::CalculateViewMatrix()
 	viewMatrix = cameraFrustum.ViewMatrix();
 }
 
+// -----------------------------------------------------------------
 void ModuleCamera3D::RecalculateProjection()
 {
 	cameraFrustum.type = FrustumType::PerspectiveFrustum;
@@ -214,6 +286,7 @@ void ModuleCamera3D::RecalculateProjection()
 	cameraFrustum.horizontalFov = 2.f * atanf(tanf(cameraFrustum.verticalFov * 0.5f) * aspectRatio);
 }
 
+// -----------------------------------------------------------------
 void ModuleCamera3D::OnGui()
 {
 	if (ImGui::CollapsingHeader("Editor Camera"))
@@ -233,6 +306,7 @@ void ModuleCamera3D::OnGui()
 	}
 }
 
+// -----------------------------------------------------------------
 void ModuleCamera3D::OnSave(JSONWriter& writer) const
 {
 	writer.String("camera");	
@@ -245,6 +319,7 @@ void ModuleCamera3D::OnSave(JSONWriter& writer) const
 	writer.EndObject();
 }
 
+// -----------------------------------------------------------------
 void ModuleCamera3D::OnLoad(const JSONReader& reader)
 {
 	if (reader.HasMember("camera"))

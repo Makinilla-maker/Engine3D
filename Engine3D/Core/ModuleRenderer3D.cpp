@@ -242,4 +242,14 @@ void ModuleRenderer3D::DrawingModes(bool currentState, int glMode) {
 }
 
 
-
+void ModuleRenderer3D::DrawRayCast(LineSegment pick)
+{
+	glColor3f(1.f, 0.f, 0.f);
+	glLineWidth(2.f);
+	glBegin(GL_LINES);
+	glVertex3fv(&pick.a.x);
+	glVertex3fv(&pick.b.x);
+	glEnd();
+	glLineWidth(1.f);
+	glColor3f(1.f, 1.f, 1.f);
+}

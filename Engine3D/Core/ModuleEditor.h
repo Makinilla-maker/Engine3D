@@ -83,7 +83,6 @@ public:
 	
 	ModuleViewportFrameBuffer viewPortScene;
 
-	ImVec2 mouse_pos;
 
 	float freq = 0.f;
 	File* file;

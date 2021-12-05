@@ -21,8 +21,6 @@
 //Tools
 #include <string>
 #include <stack>
-//#include "ImGui/imgui_dock_v2.h"
-//#include "../include/Math/float4.h"
 #include "ImGui/imgui_impl_opengl3.h"
 #include "ImGui/imgui_impl_sdl.h"
 #include "ImGui/imgui_internal.h"
@@ -764,21 +762,15 @@ void ModuleEditor::UpdateWindowStatus() {
 			App->camera->RecalculateProjection();
 		}
 
-		//Mouse Piping LALA
-		/*SceneWindow = GetDockParams("Scene");
-		if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN && App->input->GetKey(SDL_SCANCODE_LALT) != KEY_REPEAT)
-		{
-			mouse_pos.x = ImGui::GetMousePos().x - SceneWindow.x;
-			mouse_pos.y = ImGui::GetMousePos().y - SceneWindow.y;
+        //Mouse Piping 
+        if (ImGui::IsWindowFocused())
+        {
+            if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+            {
+                App->camera->MousePick();
+            }
+        }
 
-			if (mouse_pos.x >= 0 && mouse_pos.y >= 0 &&
-				mouse_pos.x <= SceneWindow.z && mouse_pos.y <= SceneWindow.w)
-			{
-				App->camera->MousePick(mouse_pos.x, mouse_pos.y - 15, SceneWindow.z, SceneWindow.w);
-				//LOG("MOUSE CLICK (%f, %f).", mouse_pos.x, mouse_pos.y);
-			}
-		}*/
-		//
         lastViewportSizeScene = viewportSize;
         ImGui::Image((ImTextureID)viewPortScene.texture, viewportSize, ImVec2(0, 1), ImVec2(1, 0));
         ImGui::End();

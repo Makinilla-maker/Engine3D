@@ -25,6 +25,8 @@ public:
 	void OnSave(JSONWriter& writer) const override;
 	void DrawingModes(bool currentState, int glMode);
 
+	void DrawRayCast(LineSegment pick);
+
 public:
 
 	Light lights[MAX_LIGHTS];

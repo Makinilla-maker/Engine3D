@@ -5,6 +5,11 @@
 #include "Math/float4x4.h"
 #include "Geometry/Frustum.h"
 
+#include "Geometry/LineSegment.h"
+#include "ImGui/imgui.h"
+
+class GameObject;
+
 class ModuleCamera3D : public Module
 {
 public:
@@ -14,8 +19,8 @@ public:
 	bool Start() override;
 	update_status Update(float dt)override;
 	bool CleanUp() override;
-
-	void MousePick(float x, float y, float w, float h);
+	
+	void MousePick();
 	void LookAt(const float3&point);
 	void CalculateViewMatrix();
 	void RecalculateProjection();
@@ -35,6 +40,9 @@ public:
 	bool projectionIsDirty = false;
 
 private:
+
+	void RayCastPicking(const LineSegment& segment);
+	ImVec2 NormalizePick(ImVec2 pos, ImVec2 size, ImVec2 mouse);
 
 	float lastDeltaX = 0.f, lastDeltaY = 0.f;
 
