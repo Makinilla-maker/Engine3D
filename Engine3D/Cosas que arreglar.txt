@@ -1,7 +1,0 @@
-Frustrum:
-darle a la F para hacercasrse a los objetos
-Los FPS:
-con el VSync desactivado, no puedes alterar los FPS
-Lo pone al maximo
-
-Opcion Clear del editor hace que pete
