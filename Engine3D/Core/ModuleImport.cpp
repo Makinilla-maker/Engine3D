@@ -73,14 +73,16 @@ bool ModuleImport::LoadGeometry(const char* path) {
 		scene = aiImportFile(path, aiProcessPreset_TargetRealtime_MaxQuality);
 	}
 
-
+	
 	if (scene != nullptr && scene->HasMeshes()) {
 		//Use scene->mNumMeshes to iterate on scene->mMeshes array
 		for (size_t i = 0; i < scene->mNumMeshes; i++)
 		{
 			bool nameFound = false;
 			std::string name;
-			FindNodeName(scene, i, name);
+			aiMatrix4x4 transform;
+			FindNodeName(scene, i, name, transform);
+			NodesS(scene->mMeshes[i], scene->mRootNode, transform, scene);
 
 			GameObject* newGameObject = App->scene->CreateGameObject(name);
 			ComponentMesh* mesh = newGameObject->CreateComponent<ComponentMesh>();
@@ -154,13 +156,17 @@ bool ModuleImport::LoadGeometry(const char* path) {
 			mesh->GenerateBuffers();
 			mesh->GenerateBounds();
 			mesh->ComputeNormals();
+
+			mesh->GenerateGlobalBounds(newGameObject->parent->transform->transformMatrixLocal);
+			
+			TransformButWellMade(transform, newGameObject);
+			
 			std::string newName(path);
 			newName = newName.substr(newName.find_last_of("/") + 1);
 			newName = newName.substr(0, newName.find_first_of("."));
-			newName += ".huevos";
+			newName += ".wtf";
 			//Save(mesh, newName.c_str());
 
-			mesh->GenerateGlobalBounds(newGameObject->parent->transform->transformMatrixLocal);
 		}
 		aiReleaseImport(scene);
 		RELEASE_ARRAY(buffer);
@@ -173,8 +179,19 @@ bool ModuleImport::LoadGeometry(const char* path) {
 
 	return true;
 }
+void ModuleImport::TransformButWellMade(aiMatrix4x4 transform, GameObject* gm)
+{
+	aiVector3D position, scale;
+	aiQuaternion rotation;
 
-void ModuleImport::FindNodeName(const aiScene* scene, const size_t i, std::string& name)
+	transform.Decompose(scale, rotation, position);
+
+	gm->transform->SetPosition(float3(position.x, position.y, position.z));
+	gm->transform->SetRotation(Quat(rotation.x, rotation.y, rotation.z, rotation.w).ToEulerXYZ());//if we multiply that QUat with RADTODEG, doesns't work
+	gm->transform->SetScale(float3(scale.x, scale.y, scale.z));
+}
+
+void ModuleImport::FindNodeName(const aiScene* scene, const size_t i, std::string& name, aiMatrix4x4& transform)
 {
 	bool nameFound = false;
 	std::queue<aiNode*> Q;
@@ -191,12 +208,33 @@ void ModuleImport::FindNodeName(const aiScene* scene, const size_t i, std::strin
 				name = node->mName.C_Str();
 			}
 		}
+		transform = node->mTransformation;
 		if (!nameFound)
 		{
 			for (size_t j = 0; j < node->mNumChildren; ++j)
 			{
 				Q.push(node->mChildren[j]);
 			}
+		}
+	}
+}
+void ModuleImport::NodesS(const aiMesh* meshScene, aiNode* node, aiMatrix4x4& transform, const aiScene* scene)
+{
+	for (int i = 0; i < node->mNumChildren; i++)
+	{
+		if (node->mChildren[i]->mNumMeshes > 0)
+		{
+			for (int j = 0; j < node->mChildren[i]->mNumMeshes; j++)
+			{
+				if (scene->mMeshes[node->mChildren[i]->mMeshes[j]] == meshScene)
+				{
+					transform = node->mChildren[i]->mTransformation;
+				}
+			}
+		}
+		if (node->mChildren[i]->mNumChildren > 0)
+		{
+			NodesS(meshScene, node->mChildren[i], transform, scene);
 		}
 	}
 }

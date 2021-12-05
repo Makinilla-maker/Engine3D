@@ -42,7 +42,7 @@ void ComponentTransform::OnGui()
 		newRotationEuler.x = RADTODEG * rotationEuler.x;
 		newRotationEuler.y = RADTODEG * rotationEuler.y;
 		newRotationEuler.z = RADTODEG * rotationEuler.z;
-		if (ImGui::DragFloat3("Rotation", &(newRotationEuler[0])))
+		if (ImGui::DragFloat3("Rotation", &(newRotationEuler[0]),0.2,-360,360))
 		{
 			newRotationEuler.x = DEGTORAD * newRotationEuler.x;
 			newRotationEuler.y = DEGTORAD * newRotationEuler.y;
@@ -80,6 +80,7 @@ void ComponentTransform::SetScale(const float3& newScale)
 	isDirty = true;
 }
 
+
 void ComponentTransform::NewAttachment()
 {
 	if (owner->parent != App->scene->root)
@@ -107,5 +108,5 @@ void ComponentTransform::RecomputeGlobalMatrix()
 	}
 	// UpdateBoundingBoxes
 	if (owner->GetComponent<ComponentMesh>() != nullptr)	owner->GetComponent<ComponentMesh>()->GenerateGlobalBounds(transformMatrix);
-		
+	if (owner->GetComponent<ComponentCamera>() != nullptr)	owner->GetComponent<ComponentCamera>()->movedCamera = true;
 }

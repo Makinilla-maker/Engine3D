@@ -132,7 +132,7 @@ update_status ModuleInput::PreUpdate(float dt)
 				filePath = event.drop.file;
 				std::string fileName(filePath);
 				fileName = App->fileSystem->NormalizePath(filePath);
-				if (fileName.substr(fileName.find_last_of(".")) == ".fbx" || fileName.substr(fileName.find_last_of(".")) == ".FBX" || fileName.substr(fileName.find_last_of(".")) == ".OBJ" || fileName.substr(fileName.find_last_of(".")) == ".obj")
+				if (fileName.substr(fileName.find_last_of(".")) == ".fbx" || fileName.substr(fileName.find_last_of(".")) == ".FBX" || fileName.substr(fileName.find_last_of(".")) == ".dae" || fileName.substr(fileName.find_last_of(".")) == ".DAE" || fileName.substr(fileName.find_last_of(".")) == ".OBJ" || fileName.substr(fileName.find_last_of(".")) == ".obj")
 				{
 					LOG("Path of file dropped will be %s", filePath);
 					App->import->LoadGeometry(fileName.c_str());
