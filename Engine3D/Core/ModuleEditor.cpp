@@ -538,6 +538,23 @@ void ModuleEditor::UpdateWindowStatus() {
     if (showResources)
     {
         ImGui::Begin("Assets List", &showResources);
+        //
+        static char buf[32] = "Name new folder"; ImGui::InputText(" ", buf, 32);
+        if (ImGui::Button("Create folder", ImVec2(120, 0)))
+        {
+            std::string newPath;
+            if (select != nullptr)
+            {
+                newPath = select->path.c_str() + std::string("/") + std::string(buf);
+                App->fileSystem->CreateDir(newPath.c_str());
+            }
+            else
+            {
+                newPath = App->scene->assetFile->path.c_str() + std::string("/") + std::string(buf);
+                App->fileSystem->CreateDir(newPath.c_str());
+            }
+        }
+        ImGui::Separator();
 
         std::stack<File*> S;
         std::stack<uint> indents;
@@ -590,6 +607,7 @@ void ModuleEditor::UpdateWindowStatus() {
         }
         ImGui::End();
     }
+
     if (showTextures)
     {
         ImGui::Begin("Textures", &showTextures);
