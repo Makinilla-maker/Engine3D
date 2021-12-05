@@ -128,13 +128,9 @@ update_status ModuleEditor::Update(float dt)
         //App->import->Load("BakerHouse.huevos");
     }
     
-    freq += 0.5f * dt;
-    if (freq >= 1.0f)
-    {
-        App->scene->assetFile->childs.clear();
-        App->scene->assetFile->Read();
-        freq = 0.0f;
-    }
+    App->scene->assetFile->childs.clear();
+    App->scene->assetFile->Read();
+    
 
     //Update status of each window and shows ImGui elements
     UpdateWindowStatus();
@@ -574,9 +570,9 @@ void ModuleEditor::UpdateWindowStatus() {
                     select = file;
                     select->selected = !select->selected;
                 }
-                if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN && select != nullptr)
+                if (App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
                 {
-                    Delete();
+                    if(select != nullptr)    Delete();
                 }
                 for (File* child : file->childs)
                 {
@@ -651,18 +647,6 @@ void ModuleEditor::UpdateWindowStatus() {
 
 
         ImGui::Begin("Hierarchy", &showHierarchyWindow);
-
-        //Just cleaning gameObjects(not textures,buffers...)
-        /*if (ImGui::Button("Clear", {60,20}))
-        {
-            App->editor->gameobjectSelected = nullptr;
-            App->scene->CleanUp(); //Clean GameObjects 
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("New", { 60,20 }))
-        {
-            App->scene->CreateGameObject();
-        }*/
         std::stack<GameObject*> S;
         std::stack<uint> indents;
         S.push(App->scene->root);

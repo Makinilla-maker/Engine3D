@@ -84,7 +84,6 @@ public:
 	ModuleViewportFrameBuffer viewPortScene;
 
 
-	float freq = 0.f;
 	File* file;
 	File* select;
 

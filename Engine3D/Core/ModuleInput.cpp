@@ -135,11 +135,13 @@ update_status ModuleInput::PreUpdate(float dt)
 				if (fileName.substr(fileName.find_last_of(".")) == ".fbx" || fileName.substr(fileName.find_last_of(".")) == ".FBX" || fileName.substr(fileName.find_last_of(".")) == ".dae" || fileName.substr(fileName.find_last_of(".")) == ".DAE" || fileName.substr(fileName.find_last_of(".")) == ".OBJ" || fileName.substr(fileName.find_last_of(".")) == ".obj")
 				{
 					LOG("Path of file dropped will be %s", filePath);
+					//Hacer que se añada el fbx a la carpeta
 					App->import->LoadGeometry(fileName.c_str());
 				}
 				else if (fileName.substr(fileName.find_last_of(".")) == ".jpg" || fileName.substr(fileName.find_last_of(".")) == ".png" || fileName.substr(fileName.find_last_of(".")) == ".PNG" || fileName.substr(fileName.find_last_of(".")) == ".JPG")
 				{
 					LOG("Path of file dropped will be %s", filePath);
+					//Hacer que se añada la imagen a la carpeta
 					std::string realFileName = fileName.substr(fileName.find_last_of("\\") + 1);
 					if (App->textures->Find(realFileName))
 					{

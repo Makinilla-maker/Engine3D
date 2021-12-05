@@ -10,7 +10,7 @@ ComponentCamera::ComponentCamera(GameObject* parent) : Component(parent)
 {
 	frustrum.type = FrustumType::PerspectiveFrustum;
 	frustrum.nearPlaneDistance = 0.2f;
-	frustrum.farPlaneDistance = 500.f;
+	frustrum.farPlaneDistance = 50000.f;
 	frustrum.front = owner->transform->GetForward();
 	frustrum.up = owner->transform->GetUp();
 	frustrum.verticalFov = 60.0f * DEGTORAD;
