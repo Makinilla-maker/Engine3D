@@ -242,7 +242,7 @@ void ModuleImport::NodesS(const aiMesh* meshScene, aiNode* node, aiMatrix4x4& tr
 	}
 }
 
-uint64 ModuleImport::Save(const ComponentMesh* mesh, const char* name)
+void ModuleImport::Save(const ComponentMesh* mesh, const char* name)
 {
 	uint ranges[5] =
 	{
