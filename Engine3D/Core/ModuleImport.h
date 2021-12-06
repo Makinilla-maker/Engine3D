@@ -28,6 +28,6 @@ public:
 	void NodesS(const aiMesh* meshScene, aiNode* node, aiMatrix4x4& transform, const aiScene* scene);
 
 	uint64 Save(const ComponentMesh* mesh, const char* name);
-	void Load(const char* name);
+	void Load(ComponentMesh* mesh, const char* name);
 	void TransformButWellMade(aiMatrix4x4 transform, GameObject* gm);
 };

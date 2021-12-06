@@ -244,80 +244,106 @@ void ModuleImport::NodesS(const aiMesh* meshScene, aiNode* node, aiMatrix4x4& tr
 
 uint64 ModuleImport::Save(const ComponentMesh* mesh, const char* name)
 {
-	uint ranges[2] =
+	uint ranges[5] =
 	{
 		mesh->numIndices,
-		mesh->numVertices
+		mesh->numVertices,
+		mesh->texturePath.length(),
+		mesh->texCoords.size(),
+		mesh->normals.size(),
 	};
-	uint size =
-		sizeof(ranges)
+	uint size = sizeof(ranges)
 		+ sizeof(uint) * mesh->numIndices
-		+ sizeof(float) * mesh->numVertices * 3;
+		+ sizeof(float3) * mesh->numVertices
+		+ mesh->texturePath.length()
+		+ sizeof(float2) * mesh->texCoords.size()
+		+ sizeof(float3) * mesh->normals.size();
 
 	char* buffer = new char[size];
 	char* cursor = buffer;
 
 	uint bytes = sizeof(ranges);
-	memcpy(cursor, ranges, bytes);
+	if (bytes > 0) memcpy(cursor, ranges, bytes);
 	cursor += bytes;
 
 	bytes = sizeof(uint) * mesh->numIndices;
-	memcpy(cursor, &mesh->indices, bytes);
+	if (bytes > 0) memcpy(cursor, &mesh->indices[0], bytes);
 	cursor += bytes;
 
 	bytes = sizeof(float3) * mesh->numVertices;
-	memcpy(cursor, &mesh->vertices, bytes);
+	if (bytes > 0) memcpy(cursor, &mesh->vertices[0], bytes);
 	cursor += bytes;
 
-	//texturePath
-	//numNormalFaces
-	//call GenerateBuffers?
-	//call ComputeNormals? etc
-	//AABB?
+	bytes = mesh->texturePath.length();
+	if (bytes > 0) memcpy(cursor, &mesh->texturePath, bytes);
+	cursor += bytes;
 
-	std::ofstream outfile(name, std::ofstream::binary);//bin?
+	bytes = sizeof(float2) * mesh->texCoords.size();
+	if (bytes > 0) memcpy(cursor, &mesh->texCoords[0], bytes);
+	cursor += bytes;
+
+	bytes = sizeof(float3) * mesh->normals.size();
+	if (bytes > 0) memcpy(cursor, &mesh->normals[0], bytes);
+	cursor += bytes;
+
+	std::ofstream outfile("Library/Meshes/" + std::string(name), std::ofstream::binary | std::ofstream::trunc);
 	outfile.write(buffer, size);
 	outfile.close();
 	delete[] buffer;
-
-	return uint64();//?
+	LOG("file %s saved successfully", name);
 }
 
-void ModuleImport::Load(const char* name)
+void ModuleImport::Load(ComponentMesh* mesh, const char* name)
 {
-	std::ifstream infile(name, std::ifstream::binary);//bin?
+	std::ifstream infile("Library/Meshes/" + std::string(name), std::ifstream::binary | std::ifstream::in);
+	if (!infile.is_open())
+	{
+		LOG("ERROR opening file: %s", name);
+		return;
+	}
 	infile.seekg(0, infile.end);
 	long size = infile.tellg();
 	infile.seekg(0);
+
 	char* buffer = new char[size];
 	infile.read(buffer, size);
 	infile.close();
 
-	GameObject* newGameObject = App->scene->CreateGameObject(name);
-	ComponentMesh* mesh = newGameObject->CreateComponent<ComponentMesh>();
-
-	uint ranges[2];
+	uint ranges[5];
 	char* cursor = buffer;
 
 	uint bytes = sizeof(ranges);
-	memcpy(ranges, cursor, bytes);
+	if (bytes > 0) memcpy(ranges, cursor, bytes);
 	cursor += bytes;
 
 	mesh->numIndices = ranges[0];
 	bytes = sizeof(uint) * mesh->numIndices;
 	mesh->indices.resize(mesh->numIndices);
-	memcpy(&mesh->indices, cursor, bytes);
+	if (bytes > 0) memcpy(&mesh->indices[0], cursor, bytes);
 	cursor += bytes;
 
 	mesh->numVertices = ranges[1];
 	bytes = sizeof(float3) * mesh->numVertices;
 	mesh->vertices.resize(mesh->numVertices);
-	memcpy(&mesh->vertices, cursor, bytes);
+	if (bytes > 0) memcpy(&mesh->vertices[0], cursor, bytes);
 	cursor += bytes;
 
-	mesh->GenerateBuffers();
-	mesh->GenerateBounds();
-	mesh->ComputeNormals();
+	bytes = sizeof(char) * ranges[2];
+	if (bytes > 0) mesh->texturePath.resize(bytes);
+	if (bytes > 0) memcpy(&mesh->texturePath[0], cursor, bytes);//god was here
+	cursor += bytes;
+
+	bytes = sizeof(float2) * ranges[3];
+	mesh->texCoords.resize(ranges[3]);
+	if (bytes > 0) memcpy(&mesh->texCoords[0], cursor, bytes);
+	cursor += bytes;
+
+	bytes = sizeof(float3) * ranges[4];
+	mesh->normals.resize(ranges[4]);
+	if (bytes > 0) memcpy(&mesh->normals[0], cursor, bytes);
+	cursor += bytes;
+
+	LOG("file %s loaded successfully", name);
 }
 
 // Called before quitting
