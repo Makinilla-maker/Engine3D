@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "ModuleTextures.h"
+#include "ModuleRenderer3D.h"
 #include "ImGui/imgui.h"
 #include "ComponentCamera.h"
 #include "ComponentTransform.h"
@@ -39,7 +40,11 @@ bool ComponentCamera::Update(float dt)
 		movedCamera = false;
 	}
 
-	//Render de lineas de camera mas adelante
+	// 
+	float3 points[8];
+	frustrum.GetCornerPoints(points);
+	App->renderer3D->DrawBox(points, float3(1.f, 1.f, 0.f));
+
 
 	return true;
 }
