@@ -190,7 +190,7 @@ void ModuleCamera3D::RayCastPicking(const LineSegment& segment)
 
 	for (std::vector<GameObject*>::iterator i = App->scene->root->children.begin(); i != App->scene->root->children.end(); i++)
 	{
-		if ((*i)->name != "Camera")
+		if ((*i)->name != "Camera" && (*i)->GetComponent<ComponentMesh>() != nullptr)
 		{
 			math::AABB a = (*i)->GetComponent<ComponentMesh>()->globalAABB;
 			if (segment.Intersects(a, nearF, farF))

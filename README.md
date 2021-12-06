@@ -6,13 +6,14 @@ HiveMind engine is a project from [Mario Hernandez](https://github.com/MHF13), [
 
 ## Features:
 
-### Engine 0.1v
+### Engine v0.1
 - In our engine, you can create base forme as a cube, pyramid, sphere or cylinder. But if you want to use your own files, you can drag and drop them to your project.
 - To drag and drop a texture, first select the ojects in hierarchie and then drop the file.
 - You can transform position, rotation and scale your object with the inspector window.
 
-### Engine 0.2v
+### Engine v0.5
 - We have a "Game" mode, which can be activated with the "Game State" button.
+- Activating this mode changes the colour of the interface to give visual feedback.
 - If you change elements while "Game State" is activated, they will return to their initial position when deactivated.
 - All meshes use AABB and can be discarded using Frustrum culling Game mode when activated.
 - We can select an object in the "Scene" window by LeftClick on it.
@@ -20,7 +21,8 @@ HiveMind engine is a project from [Mario Hernandez](https://github.com/MHF13), [
 gameobject with a camera component(main game camera), each one has its own
 framebuffer and the user can visualize both at the same time.
 - We can look at the project files from the same engine, create new folders and delete them.
-
+- We have the "library" folder where the metadata is stored.
+- The camera object has a guizmo for the frustrum.
 
 ## Controls
 - WASD to move the camera in X's axis and Z's axis.
@@ -36,7 +38,7 @@ In Asset List:
 - Once you have selected a folder, you can delete it by pressing DELETE.
 
 ## GitHub
-- https://github.com/Makinilla-maker/Engine3D
+https://github.com/Makinilla-maker/Engine3D
 
 ## License
 

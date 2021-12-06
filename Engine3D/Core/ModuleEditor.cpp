@@ -125,7 +125,6 @@ update_status ModuleEditor::Update(float dt)
     if (gameobjectSelected != nullptr && App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
     {
         gameobjectSelected->parent->RemoveChild(gameobjectSelected);
-        //App->import->Load(gameobjectSelected, "BakerHouse.wtf");
     }
     
     App->scene->assetFile->childs.clear();
@@ -464,6 +463,7 @@ void ModuleEditor::MenuBar() {
             ImGui::EndMenu();
         }
 
+        /* ---- GAME STATE ----*/
         if (ImGui::BeginMenu("Game State")) {
             if (ImGui::MenuItem("Play"))
             {
@@ -527,7 +527,7 @@ void ModuleEditor::UpdateWindowStatus() {
     if (showAboutWindow)  
         About_Window();
 
-    //Config
+    // Config
     if (showConfWindow) {
 
         ImGui::Begin("Configuration", &showConfWindow);        
@@ -535,6 +535,8 @@ void ModuleEditor::UpdateWindowStatus() {
         ImGui::End();
 
     }
+
+    // Resouce
     if (showResources)
     {
         ImGui::Begin("Assets List", &showResources);
@@ -608,6 +610,7 @@ void ModuleEditor::UpdateWindowStatus() {
         ImGui::End();
     }
 
+    // Texture
     if (showTextures)
     {
         ImGui::Begin("Textures", &showTextures);
@@ -632,7 +635,7 @@ void ModuleEditor::UpdateWindowStatus() {
         ImGui::End();
     }
         
-    //Console
+    // Console
     if (showConsoleWindow) {
 
         ImGui::Begin("Console", &showConsoleWindow);
@@ -641,6 +644,7 @@ void ModuleEditor::UpdateWindowStatus() {
         ImGui::End();
     }
 
+    // Assets
     if (showAssetsWindow) {
 
         ImGui::Begin("Assets", &showAssetsWindow);
@@ -648,7 +652,7 @@ void ModuleEditor::UpdateWindowStatus() {
         ImGui::End();
     }
 
-    //Inspector
+    // Inspector
     if (showInspectorWindow) {
 
         ImGui::Begin("Inspector", &showInspectorWindow);
@@ -660,7 +664,7 @@ void ModuleEditor::UpdateWindowStatus() {
 
     }
 
-    //Hierarchy
+    // Hierarchy
     if (showHierarchyWindow) {
 
 
@@ -740,6 +744,7 @@ void ModuleEditor::UpdateWindowStatus() {
         ImGui::End();
     }
 
+    // Game
     if (showGameWindow) {
         ImGui::Begin("Game", &showGameWindow, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
         ImVec2 viewportSize = ImGui::GetCurrentWindow()->Size;
@@ -753,6 +758,7 @@ void ModuleEditor::UpdateWindowStatus() {
         ImGui::End();
     }
 
+    // Scene
     if (showSceneWindow) {
 
         ImGui::Begin("Scene", &showSceneWindow, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);

@@ -167,7 +167,7 @@ bool ModuleImport::LoadGeometry(const char* path) {
 			std::string newName(path);
 			newName = newName.substr(newName.find_last_of("/") + 1);
 			newName = newName.substr(0, newName.find_first_of("."));
-			newName += ".wtf";
+			newName += ".hme";
 			Save(mesh, newName.c_str());
 
 		}

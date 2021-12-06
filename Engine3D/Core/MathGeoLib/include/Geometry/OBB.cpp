@@ -574,18 +574,6 @@ float3x4 OBB::WorldToLocal() const
 float3x4 OBB::LocalToWorld() const
 {
 	// To produce a normalized local->world matrix, do the following.
-	/*
-	float3x4 m;
-	float3 x = axis[0] * r.x;
-	float3 y = axis[1] * r.y;
-	float3 z = axis[2] * r.z;
-	m.SetCol(0, 2.f * x);
-	m.SetCol(1, 2.f * y);
-	m.SetCol(2, 2.f * z);
-	m.SetCol(3, pos - x - y - z);
-	return m;
-	*/
-
 	assume(axis[0].IsNormalized());
 	assume(axis[1].IsNormalized());
 	assume(axis[2].IsNormalized());
@@ -594,7 +582,6 @@ float3x4 OBB::LocalToWorld() const
 	m.SetCol(1, axis[1]);
 	m.SetCol(2, axis[2]);
 	m.SetCol(3, pos - axis[0] * r.x - axis[1] * r.y - axis[2] * r.z);
-	// Ric WTF
 	//assume(m.IsOrthonormal());
 	if(!m.IsOrthonormal())
 		m.Orthonormalize(0,1,2);
@@ -697,8 +684,6 @@ void OBB::Transform(const Quat &transform)
 
 float OBB::Distance(const float3 &point) const
 {
-	///@todo This code can be optimized a bit. See Christer Ericson's Real-Time Collision Detection,
-	/// p.134.
 	float3 closestPoint = ClosestPoint(point);
 	return point.Distance(closestPoint);
 }
@@ -799,8 +784,6 @@ void OBB::Enclose(const float3 &point)
 			mathassert(EqualAbs(Abs(p.Dot(axis[i])), r[i], 1e-1f));
 		}
 	}
-	// Should now contain the point.
-	//assume(Distance(point) <= 1e-3f);
 }
 
 void OBB::Triangulate(int x, int y, int z, float3 *outPos, float3 *outNormal, float2 *outUV, bool ccwIsFrontFacing) const
