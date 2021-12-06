@@ -168,7 +168,7 @@ bool ModuleImport::LoadGeometry(const char* path) {
 			newName = newName.substr(newName.find_last_of("/") + 1);
 			newName = newName.substr(0, newName.find_first_of("."));
 			newName += ".wtf";
-			//Save(mesh, newName.c_str());
+			Save(mesh, newName.c_str());
 
 		}
 		aiReleaseImport(scene);
@@ -286,7 +286,7 @@ void ModuleImport::Save(const ComponentMesh* mesh, const char* name)
 	if (bytes > 0) memcpy(cursor, &mesh->normals[0], bytes);
 	cursor += bytes;
 
-	std::ofstream outfile("Library/Meshes/" + std::string(name), std::ofstream::binary | std::ofstream::trunc);
+	std::ofstream outfile("Library/Models/" + std::string(name), std::ofstream::binary | std::ofstream::trunc);
 	outfile.write(buffer, size);
 	outfile.close();
 	delete[] buffer;
@@ -295,7 +295,7 @@ void ModuleImport::Save(const ComponentMesh* mesh, const char* name)
 
 void ModuleImport::Load(ComponentMesh* mesh, const char* name)
 {
-	std::ifstream infile("Library/Meshes/" + std::string(name), std::ifstream::binary | std::ifstream::in);
+	std::ifstream infile("Library/Models/" + std::string(name), std::ifstream::binary | std::ifstream::in);
 	if (!infile.is_open())
 	{
 		LOG("ERROR opening file: %s", name);

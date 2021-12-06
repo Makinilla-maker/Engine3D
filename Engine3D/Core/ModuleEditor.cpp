@@ -125,7 +125,7 @@ update_status ModuleEditor::Update(float dt)
     if (gameobjectSelected != nullptr && App->input->GetKey(SDL_SCANCODE_DELETE) == KEY_DOWN)
     {
         gameobjectSelected->parent->RemoveChild(gameobjectSelected);
-        //App->import->Load("BakerHouse.huevos");
+        //App->import->Load(gameobjectSelected, "BakerHouse.wtf");
     }
     
     App->scene->assetFile->childs.clear();
