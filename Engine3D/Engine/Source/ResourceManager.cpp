@@ -6,6 +6,7 @@
 #include "TextureImporter.h"
 #include "MeshImporter.h"
 #include "ModelImporter.h"
+#include "ShaderImporter.h"
 
 #include "MathGeoLib/src/Algorithm/Random/LCG.h"
 
@@ -91,6 +92,10 @@ uint ResourceManager::CreateResource(ResourceType type, std::string& assets, std
 		library = MODELS_FOLDER + std::string("model_") + std::to_string(uid) + ".rgmodel";
 		resource = std::make_shared<Model>(uid, assets, library);
 		break;
+	case ResourceType::SHADERS:
+		library = SHADERS_FOLDER + std::string("shader_") + std::to_string(uid) + ".rgshader";
+		resource = std::make_shared<Shader>(uid, assets, library);
+		break;
 	}
 
 	if (resource != nullptr) map[uid] = resource;
@@ -111,6 +116,9 @@ void ResourceManager::CreateResourceCreated(ResourceType type, uint uid, std::st
 		break;
 	case ResourceType::MODEL:
 		resource = std::make_shared<Model>(uid, assets, library);
+		break;
+	case ResourceType::SHADERS:
+		resource = std::make_shared<Shader>(uid, assets, library);
 		break;
 	default:
 		break;
@@ -199,6 +207,7 @@ void ResourceManager::ImportResourcesFromLibrary()
 					if (files[i].find(".rgmodel") != std::string::npos) CreateResourceCreated(ResourceType::MODEL, uid, assets, dir + files[i]);
 					else if (files[i].find(".rgtexture") != std::string::npos) CreateResourceCreated(ResourceType::TEXTURE, uid, assets, dir + files[i]);
 					else if (files[i].find(".rgmesh") != std::string::npos) CreateResourceCreated(ResourceType::MESH, uid, assets, dir + files[i]);
+					else if (files[i].find(".rgshader") != std::string::npos) CreateResourceCreated(ResourceType::SHADERS, uid, assets, dir + files[i]);
 
 					RELEASE_ARRAY(buffer);
 				}
@@ -237,6 +246,9 @@ void ResourceManager::ImportAllResources()
 				break;
 			case ResourceType::TEXTURE:
 				TextureImporter::ImportTexture(*it);
+				break;
+			case ResourceType::SHADERS:
+				ShaderImporter::ImportShader(*it);
 				break;
 			}
 		}

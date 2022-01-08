@@ -34,6 +34,7 @@ typedef unsigned __int32 uint32;
 #define MESHES_FOLDER "Library/Meshes/"
 #define TEXTURES_FOLDER "Library/Textures/"
 #define MATERIALS_FOLDER "Library/Materials/"
+#define SHADERS_FOLDER "Library/Shaders/"
 #define SCENES_FOLDER "Assets/Scenes/"
 
 // Deletes an array of buffers

@@ -259,6 +259,12 @@
       <Filter>Sources\Tools</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Engine\Source\Shader.h">
+      <Filter>Sources\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Source\ShaderImporter.h">
+      <Filter>Sources\Resources\Importers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Source\ModuleCamera3D.cpp">
@@ -425,6 +431,12 @@
     </ClCompile>
     <ClCompile Include="Engine\Source\Model.cpp">
       <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\Shader.cpp">
+      <Filter>Sources\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Source\ShaderImporter.cpp">
+      <Filter>Sources\Resources\Importers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

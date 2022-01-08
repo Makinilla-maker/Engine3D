@@ -1,6 +1,7 @@
 #pragma once
 
 #include "JsonParsing.h"
+#include "JsonConfig.h"
 
 #include "PhysFS/include/physfs.h"
 #include "assimp/cfileio.h"
@@ -60,6 +61,7 @@ private:
 	const char* name;
 	std::list<std::string> texExtension;
 	std::list<std::string> modelExtension;
+	std::list<std::string> shadersExtension;
 
 	aiFileIO* assimpIO;
 };

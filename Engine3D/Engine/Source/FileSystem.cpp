@@ -55,6 +55,7 @@ FileSystem::FileSystem(const char* assetsPath) : name("FileSystem")
 	
 	texExtension = { ".png", ".jpg", ".dds", ".tga"};
 	modelExtension = { ".obj", ".fbx", ".3DS", ".FBX"};
+	shadersExtension = { ".shader"};
 }
 
 FileSystem::~FileSystem()
@@ -111,7 +112,7 @@ uint FileSystem::Load(const char* file, char** buffer)
 
 		if (size > 0)
 		{
-			*buffer = new char[size];
+			*buffer = new char[size+1];
 			uint readed = (uint)PHYSFS_read(fsFile, *buffer, 1, size);
 			if (readed != size)
 			{
@@ -119,7 +120,11 @@ uint FileSystem::Load(const char* file, char** buffer)
 				RELEASE_ARRAY(buffer);
 			}
 			else
+			{
 				ret = readed;
+				//Adding end of file at the end of the buffer. Loading a shader file does not add this for some reason
+				(*buffer)[size] = '\0';
+			}
 		}
 
 		if (PHYSFS_close(fsFile) == 0)
@@ -331,6 +336,16 @@ ResourceType FileSystem::CheckExtension(std::string& path)
 		}
 	}
 
+	end = shadersExtension.end();
+
+	for (s = shadersExtension.begin(); s != end; ++s)
+	{
+		if (*s == extension)
+		{
+			RG_PROFILING_FUNCTION("Importing Shaders");
+			return ResourceType::SHADERS;
+		}
+	}
 	return ResourceType::NONE;
 }
 
