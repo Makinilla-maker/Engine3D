@@ -19,7 +19,6 @@ Shader::~Shader()
 
 void Shader::Load()
 {
-	//ShaderImporter::LoadTexture(libraryPath.c_str(), id, width, height, data, parameters);
 
 }
 
