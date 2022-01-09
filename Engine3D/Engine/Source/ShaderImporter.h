@@ -18,12 +18,14 @@ typedef unsigned int uint;
 namespace ShaderImporter
 {
 	void ImportShader(std::string& path);
+	void SetShaderUniforms(Shader* shader);
 	void SaveShader(uint32 shaderID, uint32 vertexID, uint32 fragmentID, std::vector<Uniform> uniforms, std::string path);
 	std::vector<Uniform> GetShaderUniforms(uint32 vertexID);
 	int ImportVertex(std::string shaderFile);
 	int ImportFragment(std::string shaderFile);
-	void CreateMetaShader(std::string& path, ShaderParameters& data, std::string& assets, uint uid, std::string& name);
+	void CreateMetaShader(std::string& path, ShaderParameters& data, std::string& assets, uint uid, std::string& name, std::string& library);
 	
 	//borrar
 	void losientomama(uint32 shaderID, uint32 vertexID, uint32 fragmentID, std::vector<Uniform> uniforms, std::string path);
+	
 }

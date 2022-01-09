@@ -28,6 +28,24 @@ public:
 
 	void LookAt(float3& target);
 	int ContainsAaBox(const AABB& boundingBox);
+	float* GetRawViewMatrix()
+	{
+		static float4x4 m;
+
+		m = cameraFrustum.ViewMatrix();
+		m.Transpose();
+
+		return (float*)m.v;
+	}
+	float* GetProjectionMatrix()
+	{
+		static float4x4 m;
+
+		m = cameraFrustum.ProjectionMatrix();
+		m.Transpose();
+
+		return (float*)m.v;
+	}
 
 public:
 	Frustum cameraFrustum;

@@ -4,8 +4,12 @@
 
 #include "ModuleScene.h"
 #include "CameraComponent.h"
+#include "MaterialComponent.h"
+#include "ModuleScene.h"
+#include "ModuleCamera3D.h"
 #include "FileSystem.h"
 #include "ResourceManager.h"
+#include "ShaderImporter.h"
 
 #include "Mesh.h"
 
@@ -21,6 +25,7 @@ MeshComponent::MeshComponent(GameObject* own, TransformComponent* trans) : mater
 	owner = own;
 	mesh = nullptr;
 	material = owner->GetComponent<MaterialComponent>();
+	
 
 	showMeshMenu = false;
 }
@@ -42,9 +47,24 @@ MeshComponent::~MeshComponent()
 {
 	if (mesh.use_count() - 1 == 1) mesh->UnLoad();
 }
-
+uint32 MeshComponent::SetDefaultShader()
+{
+	material->LoadShader("Assets\/Shaders\/WaterShader.shader");
+	return material->GetShaderID();
+}
 void MeshComponent::Draw()
 {
+	uint32 shaderProgram = 0;
+	if (material != nullptr)
+	{
+		if (material->GetShader())
+			shaderProgram = material->GetShaderID();
+			shaderProgram ? shaderProgram : shaderProgram = 0;
+	}
+	
+
+	glUseProgram(shaderProgram);
+
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
@@ -53,14 +73,32 @@ void MeshComponent::Draw()
 	
 	if (material != nullptr && material->GetActive()) material->BindTexture();
 	
+	if (shaderProgram != 0)
+	{
+		material->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&material->GetColor());
+
+		material->GetShader()->SetUniformMatrix4("modelMatrix", transform->GetLocalTransform().Transposed().ptr());
+		//material->GetShader()->SetUniformMatrix4("modelMatrix", transform.Transposed().ptr());
+
+		material->GetShader()->SetUniformMatrix4("viewMatrix", app->camera->GetRawViewMatrix());
+
+		material->GetShader()->SetUniformMatrix4("projectionMatrix", app->camera->GetProjectionMatrix());
+		material->GetShader()->SetUniform1f("time", a);
+
+		material->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&app->camera->cameraFrustum.Pos());
+
+		ShaderImporter::SetShaderUniforms(material->GetShader());
+	}
 	if (mesh != nullptr) mesh->Draw(verticesNormals, faceNormals, colorNormal, normalLength);
 
 	if (material != nullptr && material->GetActive()) material->UnbindTexture();
 	
+	glUseProgram(0);
 	glPopMatrix();
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	a+=0.05;
 }
 
 void MeshComponent::DrawOutline()

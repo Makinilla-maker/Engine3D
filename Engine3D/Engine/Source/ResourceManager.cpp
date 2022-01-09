@@ -373,3 +373,29 @@ void ResourceManager::RemoveMesh(Mesh* mesh)
 		}
 	}
 }
+
+/*std::map<uint32, Shader*> ResourceManager::GetShadersInMemory()
+{
+
+	Shader* tempShader = new Shader();
+	std::map<uint32, Shader*> shadersInMemory;
+	std::map<uint32, std::shared_ptr<Resource>>::iterator item;
+
+	for (item = map.begin(); item != map.end(); item++)
+	{
+		if (item->second->GetType() == ResourceType::SHADERS && item->second->GetName() != "")
+		{
+			tempShader = item->second;
+
+			if (tempShader->parameters.shaderID > MAX_SHADERS)
+			{
+				tempShader->parameters.shaderID = 0;
+				tempShader->parameters.fragmentID = 0;
+				tempShader->parameters.vertexID = 0;
+			}
+			shadersInMemory[tempShader->parameters.uid] = tempShader;
+		}
+
+	}
+	return shadersInMemory;
+}*/

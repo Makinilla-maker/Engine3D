@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Component.h"
+#include "Shader.h"
+#include "Color.h"
 #include <string>
 #include <memory>
 
@@ -26,10 +28,18 @@ public:
 	void UnbindTexture();
 
 	void SetTexture(std::shared_ptr<Resource> tex);
+	inline Color GetColor() const { return color; }
+	inline Shader* const GetShader() { return shader; }
+	uint32 const GetShaderID() { return shader->parameters.shaderID; }
+	//inline void SetShader(std::shared_ptr<Resource> _shader) { this->shader = _shader; }
 
+	void LoadShader(std::string path);
 private:
 	bool checker;
 	bool showTexMenu;
+	bool showShaderMenu;
 
 	std::shared_ptr<Texture> diff;
+	Shader* shader;
+	Color color = Color(1.0f, 1.0f, 1.0f, 1.0f);
 };

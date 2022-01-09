@@ -265,6 +265,9 @@
     <ClInclude Include="Engine\Source\ShaderImporter.h">
       <Filter>Sources\Resources\Importers</Filter>
     </ClInclude>
+    <ClInclude Include="Colors.h">
+      <Filter>Sources\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Source\ModuleCamera3D.cpp">
@@ -438,6 +441,7 @@
     <ClCompile Include="Engine\Source\ShaderImporter.cpp">
       <Filter>Sources\Resources\Importers</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Source\Resource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Ragnar Engine.rc" />

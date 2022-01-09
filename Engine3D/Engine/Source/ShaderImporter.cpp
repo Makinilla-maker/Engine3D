@@ -96,6 +96,26 @@ void ShaderImporter::ImportShader(std::string& path)
 
 	}
 }
+void ShaderImporter::SetShaderUniforms(Shader* shader)
+{
+	for (uint i = 0; i < shader->uniforms.size(); i++)
+	{
+		switch (shader->uniforms[i].uniformType)
+		{
+			//case UniformType::BOOL: shader->SetUniform1i(shader->uniforms[i].name.c_str(), shader->uniforms[i].boolean); break;
+		case  UniformType::INT: shader->SetUniform1i(shader->uniforms[i].name.c_str(), shader->uniforms[i].integer); break;
+		case  UniformType::FLOAT: shader->SetUniform1f(shader->uniforms[i].name.c_str(), shader->uniforms[i].floatNumber); break;
+		case  UniformType::INT_VEC2: shader->SetUniformVec2f(shader->uniforms[i].name.c_str(), shader->uniforms[i].vec2.ptr()); break;
+		case  UniformType::INT_VEC3: shader->SetUniformVec3f(shader->uniforms[i].name.c_str(), shader->uniforms[i].vec3.ptr()); break;
+		case  UniformType::INT_VEC4: shader->SetUniformVec4f(shader->uniforms[i].name.c_str(), shader->uniforms[i].vec4.ptr()); break;
+		case  UniformType::FLOAT_VEC2: shader->SetUniformVec2i(shader->uniforms[i].name.c_str(), (GLint*)shader->uniforms[i].vec2.ptr()); break;
+		case  UniformType::FLOAT_VEC3: shader->SetUniformVec3i(shader->uniforms[i].name.c_str(), (GLint*)shader->uniforms[i].vec3.ptr()); break;
+		case  UniformType::FLOAT_VEC4: shader->SetUniformVec4i(shader->uniforms[i].name.c_str(), (GLint*)shader->uniforms[i].vec4.ptr()); break;
+		case UniformType::MATRIX4: shader->SetUniformMatrix4(shader->uniforms[i].name.c_str(), (GLfloat*)shader->uniforms[i].matrix4.Transposed().ptr()); break;
+		default: break;
+		}
+	}
+}
 void ShaderImporter::SaveShader(uint32 shaderID, uint32 vertexID, uint32 fragmentID, std::vector<Uniform> uniforms, std::string path)
 {
 	JsonParsing metaShader;
@@ -255,18 +275,15 @@ int ShaderImporter::ImportFragment(std::string shaderFile)
 
 	return (outcome != 0) ? fragmentShader : -1;
 }
-void ShaderImporter::CreateMetaShader(std::string& path, ShaderParameters& data, std::string& assets, uint uid, std::string& name)
+void ShaderImporter::CreateMetaShader(std::string& path, ShaderParameters& data, std::string& assets, uint uid, std::string& name, std::string& library)
 {
 	JsonParsing metaShader;
 	const char* a = assets.c_str();
 	metaShader.SetNewJsonNumber(metaShader.ValueToObject(metaShader.GetRootValue()), "Uuid", uid);
 	metaShader.SetNewJsonString(metaShader.ValueToObject(metaShader.GetRootValue()), "Name", name.c_str());
 	metaShader.SetNewJsonString(metaShader.ValueToObject(metaShader.GetRootValue()), "Type", "Shader");
-	metaShader.SetNewJsonNumber(metaShader.ValueToObject(metaShader.GetRootValue()), "ShaderID", data.shaderID);
-	metaShader.SetNewJsonNumber(metaShader.ValueToObject(metaShader.GetRootValue()), "VertexID", data.vertexID);
-	metaShader.SetNewJsonNumber(metaShader.ValueToObject(metaShader.GetRootValue()), "FragmentID", data.fragmentID);
 	metaShader.SetNewJsonString(metaShader.ValueToObject(metaShader.GetRootValue()), "Assets Path", assets.c_str());
-	//Falta guardar una variable que no se como se hace
+	metaShader.SetNewJsonString(metaShader.ValueToObject(metaShader.GetRootValue()), "Library Path", library.c_str());
 
 	char* buffer = nullptr;
 	size_t size = metaShader.Save(&buffer);
@@ -307,3 +324,4 @@ void ShaderImporter::losientomama(uint32 shaderID, uint32 vertexID, uint32 fragm
 
 	RELEASE_ARRAY(buffer);*/
 }
+

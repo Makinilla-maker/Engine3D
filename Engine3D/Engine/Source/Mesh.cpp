@@ -66,8 +66,6 @@ void Mesh::UnLoad()
 
 void Mesh::Draw(bool& verticesNormals, bool& faceNormals, float3& colorNormal, float& colorLength)
 {
-	uint32 shaderProgram = 0;
-	
 	vbo->Bind();
 	glVertexPointer(3, GL_FLOAT, 0, NULL);
 

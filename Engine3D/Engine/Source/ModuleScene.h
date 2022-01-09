@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Module.h"
+
 #include "GameObject.h"
 #include "Quadtree.h"
 #include "GameTimer.h"
@@ -79,6 +80,7 @@ public:
 
 	Quadtree& GetQuadtree() { return qTree; }
 	void SetGameDeltaTime(float deltaTime) { gameTimer.SetDesiredDeltaTime(deltaTime); }
+	float GetTime() { return gameTimer.GetTime(); }
 
 	CameraComponent* mainCamera;
 private:

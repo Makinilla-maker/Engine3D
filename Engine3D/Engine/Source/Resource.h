@@ -11,14 +11,18 @@ enum class ResourceType
 	MESH,
 	MODEL,
 	SCENE,
-	SHADERS
+	SHADERS,
 };
+
 
 class Resource
 {
 public:
 	Resource(uint id, ResourceType t, std::string& assets, std::string& library) : uid(id), type(t), assetsPath(assets), libraryPath(library){}
-
+	Resource(ResourceType type) 
+	{
+		uid = rand() % 100;
+	}
 	~Resource() {}
 
 	virtual void Load() {}

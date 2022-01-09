@@ -271,6 +271,7 @@ void ModelImporter::CreatingModel(JsonParsing& json, JSON_Array* array, GameObje
 				app->fs->GetFilenameWithoutExtension(path);
 				path = path.substr(path.find_last_of("_") + 1, path.length());
 				material->SetTexture(ResourceManager::GetInstance()->LoadResource(std::stoll(path)));
+				//material->SetShader(ResourceManager::GetInstance()->LoadResource(std::stoll("A")));
 				break;
 			}
 			}

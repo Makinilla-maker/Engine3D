@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Globals.h"
+#include "Shader.h"
 #include <vector>
 #include <string>
 #include <map>
@@ -42,6 +43,9 @@ public:
 	void AddMesh(Mesh* mesh);
 	Mesh* IsMeshLoaded(std::string path);
 	void RemoveMesh(Mesh* mesh);
+
+	std::map<uint32, Shader*> GetShadersInMemory();
+
 
 private:
 	ResourceManager();

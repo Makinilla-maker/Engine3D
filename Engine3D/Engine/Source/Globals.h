@@ -37,6 +37,8 @@ typedef unsigned __int32 uint32;
 #define SHADERS_FOLDER "Library/Shaders/"
 #define SCENES_FOLDER "Assets/Scenes/"
 
+#define MAX_SHADERS 1000
+
 // Deletes an array of buffers
 #define RELEASE_ARRAY( x )\
 	{\

@@ -6,16 +6,19 @@
 #include "Texture.h"
 
 #include "FileSystem.h"
+#include "ShaderImporter.h"
 
 #include "Imgui/imgui.h"
 
 #include "Profiling.h"
 
-MaterialComponent::MaterialComponent(GameObject* own) : diff(nullptr), showTexMenu(false)
+MaterialComponent::MaterialComponent(GameObject* own) : diff(nullptr), showTexMenu(false), shader(nullptr)
 {
 	type = ComponentType::MATERIAL;
 	owner = own;
 	checker = false;
+	shader = new Shader();
+	showShaderMenu = false;
 	
 	active = true;
 }
@@ -24,6 +27,8 @@ MaterialComponent::MaterialComponent(MaterialComponent* mat) : showTexMenu(false
 {
 	checker = mat->checker;
 	diff = mat->diff;
+
+	shader = new Shader();
 }
 
 MaterialComponent::~MaterialComponent()
@@ -76,6 +81,30 @@ void MaterialComponent::OnEditor()
 			ImGui::SameLine();
 			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%d", 0);
 		}
+		if (shader != nullptr)
+		{
+			ImGui::Text("Select Shader: ");
+			ImGui::SameLine();
+			if (ImGui::Button(diff ? diff->GetName().c_str() : ""))
+			{
+				showShaderMenu = true;
+			}
+			ImGui::Text("Path: ");
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", shader->GetPath().c_str());
+			if (ImGui::Button("Default shader", { 200,25 }))
+			{
+				owner->GetComponent<MeshComponent>()->GetMaterial()->LoadShader("Assets\/Shaders\/DefaultShader.shader");
+			}
+			if (ImGui::Button("Water shader", { 200,25 }))
+			{
+				owner->GetComponent<MeshComponent>()->GetMaterial()->LoadShader("Assets\/Shaders\/WaterShader.shader");
+			}
+			if (ImGui::Button("Reflection Shader", { 200,25 }))
+			{
+				owner->GetComponent<MeshComponent>()->GetMaterial()->LoadShader("Assets\/Shaders\/ReflectionShader.shader");
+			}
+		}
 		ImGui::Separator();
 	}
 
@@ -113,6 +142,7 @@ void MaterialComponent::OnEditor()
 		ImGui::End();
 	}
 
+	
 	ImGui::PopID();
 }
 
@@ -150,4 +180,59 @@ void MaterialComponent::UnbindTexture()
 void MaterialComponent::SetTexture(std::shared_ptr<Resource> tex)
 {
 	diff = std::static_pointer_cast<Texture>(tex);
+}
+
+
+void MaterialComponent::LoadShader(std::string path)
+{
+	char* buffer;
+	int size = app->fs->Load(path.c_str(), &buffer);
+	std::string a = path;
+	if (size <= 0)
+	{
+		delete[] buffer;
+		LOG("Shader: %s not found or can't be loaded.", fullPath);
+		return;
+	}
+	std::string file(buffer);
+	if (file.find("__Vertex_Shader__") != std::string::npos)
+	{
+		shader->parameters.vertexID = ShaderImporter::ImportVertex(file);
+	}
+	if (file.find("__Fragment_Shader__") != std::string::npos)
+	{
+		shader->parameters.fragmentID = ShaderImporter::ImportFragment(file);
+	}
+	if (shader->parameters.vertexID != 0 && shader->parameters.fragmentID != 0)
+	{
+		GLint outcome;
+		shader->parameters.vertexID = (GLuint)shader->parameters.vertexID;
+		shader->parameters.fragmentID = (GLuint)shader->parameters.fragmentID;
+
+		shader->parameters.shaderID = glCreateProgram();
+		glAttachShader(shader->parameters.shaderID, shader->parameters.vertexID);
+		glAttachShader(shader->parameters.shaderID, shader->parameters.fragmentID);
+		glLinkProgram(shader->parameters.shaderID);
+
+		glGetProgramiv(shader->parameters.shaderID, GL_LINK_STATUS, &outcome);
+		if (outcome == 0)
+		{
+			GLchar info[512];
+			glGetProgramInfoLog(shader->parameters.shaderID, 512, NULL, info);
+			LOG("Shader compiling error: %s", info);
+		}
+		else if (shader->parameters.uniforms.size() == 0)
+		{
+			shader->parameters.uniforms = ShaderImporter::GetShaderUniforms(shader->parameters.shaderID);
+		}
+
+		glDeleteShader(shader->parameters.vertexID);
+		glDeleteShader(shader->parameters.fragmentID);
+		glDeleteShader(shader->parameters.shaderID);
+	}
+	else
+	{
+		LOG("ERROR, Vertex shader: &d or Fragment shader: %d are not correctly compiled.", shader->vertexID, shader->fragmentID);
+	}
+	delete[] buffer;
 }

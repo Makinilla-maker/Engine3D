@@ -3,14 +3,18 @@
 #include "Shader.h"
 #include "ShaderImporter.h"
 
+Shader::Shader() : Resource(ResourceType::SHADERS)
+{
+
+}
+
 Shader::Shader(uint uid, std::string& assets, std::string& library) : Resource(uid, ResourceType::SHADERS, assets, library), parameters({})
 {
 	name = assets;
 	app->fs->GetFilenameWithoutExtension(name);
 	std::string metaPath = SHADERS_FOLDER + std::string("shader_") + std::to_string(uid) + ".meta";
-	ShaderImporter::CreateMetaShader(metaPath, parameters, assets, uid, name);
+	ShaderImporter::CreateMetaShader(metaPath, parameters, assets, uid, name, library);
 }
-
 
 Shader::~Shader()
 {

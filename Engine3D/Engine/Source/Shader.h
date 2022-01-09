@@ -46,6 +46,7 @@ struct ShaderParameters
 	uint32 fragmentID = 0;
 	uint uid;
 	std::string path;
+	std::string name;
 
 	std::vector<Uniform> uniforms;
 };
@@ -54,8 +55,8 @@ class Shader : public Resource
 {
 public:
 
-	Shader(uint uid, std::string& assets, std::string& library);
 	Shader();
+	Shader(uint uid, std::string& assets, std::string& library);
 	~Shader();
 
 	void SetUniformMatrix4(std::string name, GLfloat* value);
@@ -69,6 +70,7 @@ public:
 
 	void SetUniform1f(std::string name, GLfloat value);
 	void SetUniform1i(std::string name, GLint value);
+	std::string GetPath() { return parameters.path; }
 
 	void Load() override;
 

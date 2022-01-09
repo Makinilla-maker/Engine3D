@@ -23,6 +23,8 @@ public:
 	MeshComponent(MeshComponent* meshComponent, TransformComponent* trans);
 	~MeshComponent();
 
+	uint32 SetDefaultShader();
+
 	void Draw() override;
 	void DrawOutline() override;
 	void OnEditor() override;
@@ -34,6 +36,8 @@ public:
 
 	inline void SetTransform(TransformComponent* trans) { transform = trans; }
 	inline void SetMaterial(MaterialComponent* mat) { material = mat; }
+	//inline void SetShader(std::shared_ptr<Shader> shader) { material->SetShader(shader); }
+	MaterialComponent* GetMaterial() { return material; }
 
 	inline AABB GetLocalAABB() { return localBoundingBox; }
 	const std::shared_ptr<Mesh> GetMesh() const { return mesh; }
@@ -50,6 +54,7 @@ private:
 	std::shared_ptr<Mesh> mesh;
 
 	AABB localBoundingBox;
+	float a = 0;
 
 	bool showMeshMenu;
 };
