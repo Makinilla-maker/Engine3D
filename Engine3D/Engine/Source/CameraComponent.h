@@ -31,6 +31,11 @@ public:
 
 	float4x4 matrixViewFrustum;
 	float4x4 matrixProjectionFrustum;
+
+	vec GetCameraPos() 
+	{
+		return camera.Pos();
+	}
 private:
 
 	Frustum camera;

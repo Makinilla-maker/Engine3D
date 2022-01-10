@@ -268,10 +268,29 @@ void ModelImporter::CreatingModel(JsonParsing& json, JSON_Array* array, GameObje
 			{
 				MaterialComponent* material = (MaterialComponent*)newGo->CreateComponent(ComponentType::MATERIAL);
 				std::string path = component.GetJsonString("Texture Path");
+				///
+				char* buffer = nullptr;
+				uint size = app->fs->Load(path.c_str(), &buffer);
+				uint64 textureID = 0;
+				uint bytes;
+
+				const char* cursor = buffer;
+
+				bytes = sizeof(unsigned long long);
+				memcpy(&textureID, cursor, bytes);
+				cursor += bytes;
+
+				float color[4];
+				bytes = sizeof(float) * 4;
+				memcpy(color, cursor, bytes);
+				cursor += bytes;
+				Color _color = Color(color[0], color[1], color[2], color[3]);
+				material->SetColor(_color);
+				///
+				
 				app->fs->GetFilenameWithoutExtension(path);
 				path = path.substr(path.find_last_of("_") + 1, path.length());
 				material->SetTexture(ResourceManager::GetInstance()->LoadResource(std::stoll(path)));
-				//material->SetShader(ResourceManager::GetInstance()->LoadResource(std::stoll("A")));
 				break;
 			}
 			}

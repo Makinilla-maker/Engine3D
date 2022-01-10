@@ -28,10 +28,11 @@ public:
 	void UnbindTexture();
 
 	void SetTexture(std::shared_ptr<Resource> tex);
+	inline void SetColor(Color color) { this->color = color; }
 	inline Color GetColor() const { return color; }
 	inline Shader* const GetShader() { return shader; }
 	uint32 const GetShaderID() { return shader->parameters.shaderID; }
-	//inline void SetShader(std::shared_ptr<Resource> _shader) { this->shader = _shader; }
+	std::shared_ptr<Texture> getTexture() { return diff; }
 
 	void LoadShader(std::string path);
 private:
@@ -41,5 +42,5 @@ private:
 
 	std::shared_ptr<Texture> diff;
 	Shader* shader;
-	Color color = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	Color color = Color(0.588235319f,1.0f, 0.588235319f,1);
 };

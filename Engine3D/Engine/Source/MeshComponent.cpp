@@ -10,6 +10,7 @@
 #include "FileSystem.h"
 #include "ResourceManager.h"
 #include "ShaderImporter.h"
+#include "ModuleScene.h"
 
 #include "Mesh.h"
 
@@ -49,7 +50,7 @@ MeshComponent::~MeshComponent()
 }
 uint32 MeshComponent::SetDefaultShader()
 {
-	material->LoadShader("Assets\/Shaders\/WaterShader.shader");
+	material->LoadShader("Assets\/Shaders\/DefaultShader.shader");
 	return material->GetShaderID();
 }
 void MeshComponent::Draw()
@@ -57,9 +58,9 @@ void MeshComponent::Draw()
 	uint32 shaderProgram = 0;
 	if (material != nullptr)
 	{
-		if (material->GetShader())
+		if (material->GetShader())	
 			shaderProgram = material->GetShaderID();
-			shaderProgram ? shaderProgram : shaderProgram = 0;
+		shaderProgram ? shaderProgram : shaderProgram = SetDefaultShader();
 	}
 	
 
@@ -75,20 +76,26 @@ void MeshComponent::Draw()
 	
 	if (shaderProgram != 0)
 	{
+		material->GetShader()->SetUniform1i("hasTexture", (GLint)true);
 		material->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&material->GetColor());
 
 		material->GetShader()->SetUniformMatrix4("modelMatrix", transform->GetLocalTransform().Transposed().ptr());
-		//material->GetShader()->SetUniformMatrix4("modelMatrix", transform.Transposed().ptr());
 
 		material->GetShader()->SetUniformMatrix4("viewMatrix", app->camera->GetRawViewMatrix());
 
 		material->GetShader()->SetUniformMatrix4("projectionMatrix", app->camera->GetProjectionMatrix());
+
 		material->GetShader()->SetUniform1f("time", a);
 
 		material->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&app->camera->cameraFrustum.Pos());
 
 		ShaderImporter::SetShaderUniforms(material->GetShader());
 	}
+	if (material != nullptr)
+	{
+		if (material->GetShader())	material->GetShader()->SetUniform1f("time", a);
+	}
+
 	if (mesh != nullptr) mesh->Draw(verticesNormals, faceNormals, colorNormal, normalLength);
 
 	if (material != nullptr && material->GetActive()) material->UnbindTexture();
