@@ -1,5 +1,6 @@
 
 #ifdef __Vertex_Shader__
+#version 330 core
 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec2 texCoord;
@@ -30,6 +31,7 @@ void main()
 //--------------------
 
 #ifdef __Fragment_Shader__
+#version 330 core
 
 in vec4 ourColor;
 in vec3 ourNormal;

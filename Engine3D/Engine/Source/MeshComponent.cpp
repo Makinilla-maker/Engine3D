@@ -77,7 +77,6 @@ void MeshComponent::Draw()
 	if (shaderProgram != 0)
 	{
 		material->GetShader()->SetUniform1i("hasTexture", (GLint)true);
-		material->GetShader()->SetUniformVec4f("inColor", (GLfloat*)&material->GetColor());
 
 		material->GetShader()->SetUniformMatrix4("modelMatrix", transform->GetLocalTransform().Transposed().ptr());
 
