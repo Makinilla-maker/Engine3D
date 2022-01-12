@@ -5,6 +5,9 @@
 #include "Color.h"
 #include <string>
 #include <memory>
+#include <fstream>
+
+#include "Imgui/TextEditor/TextEditor.h"
 
 typedef unsigned int GLuint;
 typedef unsigned char GLubyte;
@@ -21,6 +24,10 @@ public:
 
 	void OnEditor() override;
 
+	void ShowUniforms();
+
+	void EditorShader(MaterialComponent* material);
+
 	bool OnLoad(JsonParsing& node) override;
 	bool OnSave(JsonParsing& node, JSON_Array* array) override;
 
@@ -28,8 +35,8 @@ public:
 	void UnbindTexture();
 
 	void SetTexture(std::shared_ptr<Resource> tex);
-	inline void SetColor(Color color) { this->color = color; }
-	inline Color GetColor() const { return color; }
+	//inline void SetColor(Color color) { this->color = color; }
+	//inline Color GetColor() const { return color; }
 	inline Shader* const GetShader() { return shader; }
 	uint32 const GetShaderID() { return shader->parameters.shaderID; }
 	std::shared_ptr<Texture> getTexture() { return diff; }
@@ -39,8 +46,13 @@ private:
 	bool checker;
 	bool showTexMenu;
 	bool showShaderMenu;
+	bool showShaderEditor;
 
 	std::shared_ptr<Texture> diff;
 	Shader* shader;
-	Color color = Color(0.588235319f,1.0f, 0.588235319f,1);
+
+	Shader* shadertoRecompily;
+
+	TextEditor editor;
+	std::string fileToEdit;
 };

@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "ResourceManager.h"
+#include "ModuleEditor.h"
 #include "Texture.h"
 
 #include "FileSystem.h"
@@ -12,6 +13,11 @@
 
 #include "Profiling.h"
 
+#include "glew/include/GL/glew.h"
+#include "SDL/include/SDL_opengl.h"
+
+#include <map>
+
 MaterialComponent::MaterialComponent(GameObject* own) : diff(nullptr), showTexMenu(false), shader(nullptr)
 {
 	type = ComponentType::MATERIAL;
@@ -19,6 +25,8 @@ MaterialComponent::MaterialComponent(GameObject* own) : diff(nullptr), showTexMe
 	checker = false;
 	shader = new Shader();
 	showShaderMenu = false;
+	showShaderEditor = false;
+
 	
 	active = true;
 }
@@ -27,6 +35,8 @@ MaterialComponent::MaterialComponent(MaterialComponent* mat) : showTexMenu(false
 {
 	checker = mat->checker;
 	diff = mat->diff;
+	showShaderMenu = false;
+	showShaderEditor = false;
 
 	shader = new Shader();
 }
@@ -83,12 +93,9 @@ void MaterialComponent::OnEditor()
 		}
 		if (shader != nullptr)
 		{
-			ImGui::Text("Select Shader: ");
+			ImGui::Text("Selected Shader: ");
 			ImGui::SameLine();
-			if (ImGui::Button(diff ? diff->GetName().c_str() : ""))
-			{
-				showShaderMenu = true;
-			}
+			ImGui::Text(shader->parameters.name.c_str());
 			ImGui::Text("Path: ");
 			ImGui::SameLine();
 			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", shader->GetPath().c_str());
@@ -96,13 +103,21 @@ void MaterialComponent::OnEditor()
 			{
 				owner->GetComponent<MeshComponent>()->GetMaterial()->LoadShader("Assets\/Shaders\/DefaultShader.shader");
 			}
-			if (ImGui::Button("Water shader", { 200,25 }))
+			if (ImGui::Button("Water shader (example)", { 200,25 }))
 			{
 				owner->GetComponent<MeshComponent>()->GetMaterial()->LoadShader("Assets\/Shaders\/WaterShader.shader");
+			}
+			if (ImGui::Button("Own water shader", { 200,25 }))
+			{
+				owner->GetComponent<MeshComponent>()->GetMaterial()->LoadShader("Assets\/Shaders\/WaterShader_2n part.shader");
 			}
 			if (ImGui::Button("Reflection Shader", { 200,25 }))
 			{
 				owner->GetComponent<MeshComponent>()->GetMaterial()->LoadShader("Assets\/Shaders\/ReflectionShader.shader");
+			}
+			if (ImGui::Button("Edit Shader", { 100,25 }))
+			{
+				EditorShader(owner->GetComponent<MeshComponent>()->GetMaterial());
 			}
 		}
 		ImGui::Separator();
@@ -141,9 +156,94 @@ void MaterialComponent::OnEditor()
 
 		ImGui::End();
 	}
+	if (showShaderEditor)
+	{
+		ImGui::Begin("Shader Editor", &showShaderEditor, ImGuiWindowFlags_HorizontalScrollbar | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse);
+		//Update
+		auto cpos = editor.GetCursorPosition();
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				std::string shader = editor.GetText();
 
+				app->fs->RemoveFile(fileToEdit.c_str());
+				app->fs->Save(fileToEdit.c_str(), shader.c_str(), editor.GetText().size());
+
+				glDetachShader(shadertoRecompily->parameters.shaderID, shadertoRecompily->parameters.vertexID);
+				glDetachShader(shadertoRecompily->parameters.shaderID, shadertoRecompily->parameters.fragmentID);
+				glDeleteProgram(shadertoRecompily->parameters.shaderID);
+
+				ShaderImporter::ImportShader(shadertoRecompily->parameters.path.c_str());
+
+				ImGui::EndMenu();
+			}
+			ImGui::EndMenuBar();
+		}
+
+		ImGui::Text("%6d/%-6d %6d lines  | %s | %s | %s | %s", cpos.mLine + 1, cpos.mColumn + 1, editor.GetTotalLines(),
+			editor.IsOverwrite() ? "Ovr" : "Ins",
+			editor.CanUndo() ? "*" : " ",
+			editor.GetLanguageDefinition().mName.c_str(), fileToEdit.c_str());
+
+		editor.Render("TextEditor");
+		ImGui::End();
+	}
+
+	ShowUniforms();
 	
+	if (!owner->GetComponent<MeshComponent>()->GetMaterial()->GetShader()->parameters.uniforms.empty())
+	{
+		if (ImGui::Button("Save Uniforms"))
+		{
+			//app->resources->SaveResource(owner->GetComponent<MeshComponent>()->GetMaterial()->GetShader());
+		}
+	}
+		
 	ImGui::PopID();
+}
+
+void MaterialComponent::ShowUniforms()
+{
+	Shader* shader = owner->GetComponent<MeshComponent>()->GetMaterial()->GetShader();
+	if (shader->parameters.name != "DefaultShader")
+	{
+		for (uint i = 0; i < shader->parameters.uniforms.size(); i++)
+		{
+			switch (shader->parameters.uniforms[i].uniformType)
+			{
+			case  UniformType::INT:	ImGui::DragInt(shader->parameters.uniforms[i].name.c_str(), &shader->parameters.uniforms[i].integer, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+			case  UniformType::FLOAT: ImGui::DragFloat(shader->parameters.uniforms[i].name.c_str(), &shader->parameters.uniforms[i].floatNumber, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+			case  UniformType::INT_VEC2: ImGui::DragInt2(shader->parameters.uniforms[i].name.c_str(), (int*)&shader->parameters.uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+			case  UniformType::INT_VEC3: ImGui::DragInt3(shader->parameters.uniforms[i].name.c_str(), (int*)&shader->parameters.uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+			case  UniformType::INT_VEC4: ImGui::DragInt4(shader->parameters.uniforms[i].name.c_str(), (int*)&shader->parameters.uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+			case  UniformType::FLOAT_VEC2: ImGui::DragFloat2(shader->parameters.uniforms[i].name.c_str(), (float*)&shader->parameters.uniforms[i].vec2, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+			case  UniformType::FLOAT_VEC3: ImGui::DragFloat3(shader->parameters.uniforms[i].name.c_str(), (float*)&shader->parameters.uniforms[i].vec3, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+			case  UniformType::FLOAT_VEC4: ImGui::DragFloat4(shader->parameters.uniforms[i].name.c_str(), (float*)&shader->parameters.uniforms[i].vec4, 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+			case UniformType::MATRIX4: ImGui::DragFloat4(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].matrix4.ToEulerXYZ().ptr(), 0.02f, 0.0f, 0.0f, "%.2f", ImGuiSliderFlags_None); break;
+			}
+		}
+	}
+	
+}
+
+void MaterialComponent::EditorShader(MaterialComponent* material)
+{
+	TextEditor::LanguageDefinition lang = TextEditor::LanguageDefinition::GLSL();
+
+	fileToEdit = material->GetShader()->parameters.path;
+	editor.SetShowWhitespaces(false);
+
+	std::ifstream text(fileToEdit.c_str());
+	if (text.good())
+	{
+		std::string str((std::istreambuf_iterator<char>(text)), std::istreambuf_iterator<char>());
+		editor.SetText(str);
+	}
+
+	showShaderEditor = true;
+
+	shadertoRecompily = material->GetShader();
 }
 
 bool MaterialComponent::OnLoad(JsonParsing& node)
@@ -187,7 +287,17 @@ void MaterialComponent::LoadShader(std::string path)
 {
 	char* buffer;
 	int size = app->fs->Load(path.c_str(), &buffer);
-	std::string a = path;
+
+	// Import name and path start
+	size_t separator = path.find_last_of("\\/");
+	size_t dot = path.find_last_of(".");
+	shader->parameters.path = path;
+	if (separator < path.length())
+		shader->parameters.name = path.substr(separator + 1, dot - separator - 1);
+	else
+		shader->parameters.name = path.substr(0, dot);
+	//import name finish
+
 	if (size <= 0)
 	{
 		delete[] buffer;

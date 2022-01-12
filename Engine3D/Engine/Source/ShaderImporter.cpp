@@ -18,7 +18,7 @@
 
 #include "Profiling.h"
 
-void ShaderImporter::ImportShader(std::string& path)
+void ShaderImporter::ImportShader(std::string path)
 {
 	RG_PROFILING_FUNCTION("Importing Shader");
 
@@ -81,77 +81,38 @@ void ShaderImporter::ImportShader(std::string& path)
 		}
 		else
 		{
-			LOG("ERROR, Vertex shader: &d or Fragment shader: %d are not correctly compiled.", shader->vertexID, shader->fragmentID);
+			DEBUG_LOG("ERROR, Vertex shader: &d or Fragment shader: %d are not correctly compiled.");// , shader->vertexID, shader->fragmentID);
 		}
-		if (app->fs->Save(path.c_str(), buffer, size) > 0)
-			DEBUG_LOG("Shader saved!");
-		delete[] buffer;
 
 		std::string libraryPath;
 		ResourceManager::GetInstance()->CreateResource(ResourceType::SHADERS, path, libraryPath);
-
-		SaveShader(shaderID, vertexID, fragmentID, uniforms, libraryPath);
-		/*std::string path1 = SHADERS_FOLDER + std::string("shader_") + std::to_string(1) + ".meta";
-		losientomama(shaderID, vertexID, fragmentID, uniforms, path1);*/
+		if (app->fs->Save(libraryPath.c_str(), buffer, size) > 0)
+			DEBUG_LOG("Shader saved!");
+		delete[] buffer;
+		RELEASE_ARRAY(buffer);
 
 	}
 }
 void ShaderImporter::SetShaderUniforms(Shader* shader)
 {
-	for (uint i = 0; i < shader->uniforms.size(); i++)
+	for (uint i = 0; i < shader->parameters.uniforms.size(); i++)
 	{
-		switch (shader->uniforms[i].uniformType)
+		switch (shader->parameters.uniforms[i].uniformType)
 		{
 			//case UniformType::BOOL: shader->SetUniform1i(shader->uniforms[i].name.c_str(), shader->uniforms[i].boolean); break;
-		case  UniformType::INT: shader->SetUniform1i(shader->uniforms[i].name.c_str(), shader->uniforms[i].integer); break;
-		case  UniformType::FLOAT: shader->SetUniform1f(shader->uniforms[i].name.c_str(), shader->uniforms[i].floatNumber); break;
-		case  UniformType::INT_VEC2: shader->SetUniformVec2f(shader->uniforms[i].name.c_str(), shader->uniforms[i].vec2.ptr()); break;
-		case  UniformType::INT_VEC3: shader->SetUniformVec3f(shader->uniforms[i].name.c_str(), shader->uniforms[i].vec3.ptr()); break;
-		case  UniformType::INT_VEC4: shader->SetUniformVec4f(shader->uniforms[i].name.c_str(), shader->uniforms[i].vec4.ptr()); break;
-		case  UniformType::FLOAT_VEC2: shader->SetUniformVec2i(shader->uniforms[i].name.c_str(), (GLint*)shader->uniforms[i].vec2.ptr()); break;
-		case  UniformType::FLOAT_VEC3: shader->SetUniformVec3i(shader->uniforms[i].name.c_str(), (GLint*)shader->uniforms[i].vec3.ptr()); break;
-		case  UniformType::FLOAT_VEC4: shader->SetUniformVec4i(shader->uniforms[i].name.c_str(), (GLint*)shader->uniforms[i].vec4.ptr()); break;
-		case UniformType::MATRIX4: shader->SetUniformMatrix4(shader->uniforms[i].name.c_str(), (GLfloat*)shader->uniforms[i].matrix4.Transposed().ptr()); break;
+		case  UniformType::INT: shader->SetUniform1i(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].integer); break;
+		case  UniformType::FLOAT: shader->SetUniform1f(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].floatNumber); break;
+		case  UniformType::INT_VEC2: shader->SetUniformVec2f(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].vec2.ptr()); break;
+		case  UniformType::INT_VEC3: shader->SetUniformVec3f(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].vec3.ptr()); break;
+		case  UniformType::INT_VEC4: shader->SetUniformVec4f(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].vec4.ptr()); break;
+		case  UniformType::FLOAT_VEC2: shader->SetUniformVec2i(shader->parameters.uniforms[i].name.c_str(), (GLint*)shader->parameters.uniforms[i].vec2.ptr()); break;
+		case  UniformType::FLOAT_VEC3: shader->SetUniformVec3i(shader->parameters.uniforms[i].name.c_str(), (GLint*)shader->parameters.uniforms[i].vec3.ptr()); break;
+		case  UniformType::FLOAT_VEC4: shader->SetUniformVec4i(shader->parameters.uniforms[i].name.c_str(), (GLint*)shader->parameters.uniforms[i].vec4.ptr()); break;
 		default: break;
 		}
 	}
 }
-void ShaderImporter::SaveShader(uint32 shaderID, uint32 vertexID, uint32 fragmentID, std::vector<Uniform> uniforms, std::string path)
-{
-	JsonParsing metaShader;
-	//JsonConfig jsonFile;
-	//ArrayConfig jsonArrray = jsonFile.SetArray("Uniforms");
 
-	metaShader.SetNewJsonNumber(metaShader.ValueToObject(metaShader.GetRootValue()), "ShaderID", shaderID);
-	metaShader.SetNewJsonNumber(metaShader.ValueToObject(metaShader.GetRootValue()), "VertexID", vertexID);
-	metaShader.SetNewJsonNumber(metaShader.ValueToObject(metaShader.GetRootValue()), "FragmentID", fragmentID);
-	/*
-	for (uint i = 0; i < uniforms.size(); i++)
-	{
-		JsonConfig& node = jsonArrray.AddNode();
-		node.SetString("Name", uniforms[i].name);
-		node.SetInteger("Type", (int)uniforms[i].uniformType);
-
-		switch (uniforms[i].uniformType)
-		{
-			case  UniformType::BOOL: node.SetInteger("Value", uniforms[i].boolean); break;
-			case  UniformType::INT: node.SetInteger("Value", uniforms[i].integer); break;
-			case  UniformType::FLOAT: node.SetNumber("Value", uniforms[i].floatNumber); break;
-			case  UniformType::INT_VEC2: node.SetFloat2("Value", uniforms[i].vec2); break;
-			case  UniformType::INT_VEC3: node.SetFloat3("Value", uniforms[i].vec3); break;
-			case  UniformType::INT_VEC4: node.SetFloat4("Value", uniforms[i].vec4); break;
-			case  UniformType::FLOAT_VEC2: node.SetFloat2("Value", uniforms[i].vec2); break;
-			case  UniformType::FLOAT_VEC3: node.SetFloat3("Value", uniforms[i].vec3); break;
-			case  UniformType::FLOAT_VEC4: node.SetFloat4("Value", uniforms[i].vec4); break;
-		}
-	}*/
-	char* buffer = nullptr;
-	size_t size = metaShader.Save(&buffer);
-
-	app->fs->Save(path.c_str(), buffer, size);
-
-	RELEASE_ARRAY(buffer);
-}
 std::vector<Uniform> ShaderImporter::GetShaderUniforms(uint32 shaderID)
 {
 	GLint activeUniforms;

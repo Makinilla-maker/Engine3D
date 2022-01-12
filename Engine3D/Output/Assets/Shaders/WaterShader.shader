@@ -49,16 +49,9 @@ vec3 GerstnerWave(float wavelenght, float steepness, vec2 direction, vec3 pos, i
     		d.x * (a * cos(f))
     );
     
-  binormal += vec3(
-    	 - (d.x * d.y) *(a * sin(f)),
-    	 - (d.y * d.y) *(a * sin(f)),
-    	  d.y * (a * cos(f))
-    );
+  	binormal += vec3(- (d.x * d.y) *(a * sin(f)), - (d.y * d.y) *(a * sin(f)), d.y * (a * cos(f)));
     
-	return vec3( (cos(f) * a) * d.x,
-							(cos(f) * a) * d.y,
-							sin(f) * a
-	);
+	return vec3( (cos(f) * a) * d.x, (cos(f) * a) * d.y, sin(f) * a );
 }
 
 
@@ -70,31 +63,9 @@ void main()
     vec3 tangent = vec3( 1, 0, 0);
     vec3 binormal = vec3( 0, 1, 0 );
     
-    pos += GerstnerWave(wavelenght_A, steepness_A, direction_A, position, tangent, binormal);
-	pos += GerstnerWave(wavelenght_B, steepness_B, direction_B, position, tangent, binormal);
+    //pos += GerstnerWave(wavelenght_A, steepness_A, direction_A, position, tangent, binormal);
+	//pos += GerstnerWave(wavelenght_B, steepness_B, direction_B, position, tangent, binormal);
     pos += GerstnerWave(wavelenght_C, steepness_C, direction_C, position, tangent, binormal);
-    
-    /*
-        vec3 old_tangent = normalize(vec3 (
-    		1 - steepness * sin(f),
-    		0,
-    		-  steepness * cos(f)
-    ));
-    
-        vec3 tangent = vec3(
-    		- d.x * d.x * (steepness * sin(f)), 
-    		- d.x * d.y * (steepness * sin(f)),
-    		d.x * (steepness * cos(f))
-    );
-    
-    vec3 binormal = vec3(
-    		 - d.x *  d.y *(steepness * sin(f)),
-    	 1 - d.y * d.y *(steepness * sin(f)),
-    	  d.y * (steepness * cos(f))
-    );
-    */
-
-    //vec3(-tangent.z, tangent.x, 0);
     
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(pos, 1.0f);
 	
@@ -153,7 +124,6 @@ void main()
     else
     {
     	float mixvalue = distance(fPos.z/2, -3)/3;
-    	//lcolor = mix(dark_color, blue, min(mixvalue, 1));
     	lcolor = blue; 
     	vec4 tex_color =  texture2D(ourTexture, TexCoord);
     	lcolor +=  tex_color.rgb*(0, 0.7, 0.9)*0.4; 
@@ -171,14 +141,8 @@ void main()
 	vec2 inten = blinnPhongDir(vec3(1, 1, 0), 0.3, Ka, Kd, Ks, shininess);
 	
 	vec4 tex_color =  texture2D(ourTexture, TexCoord);
-	//tex_color =  vec4(1 - tex_color.r, 1 - tex_color.g,1 - tex_color.b, 1) * vec4(1,1,1,1);
 	
-	//lcolor +=  tex_color.rgb*foam_color*0.4; 
-	
-	color = vec4(lcolor*inten.x + vec3(1.0) * inten.y, 1.0); //* texture2D(ourTexture, TexCoord);
-	
-	//color =  texture2D(ourTexture, TexCoord);
-	//color = vec4(fNormal.r, fNormal.g, fNormal.b, 1.0);
+	color = vec4(lcolor*inten.x + vec3(1.0) * inten.y, 1.0);
 }
 
 #endif

@@ -78,7 +78,5 @@ public:
 
 	ShaderParameters parameters;
 
-	std::vector<Uniform> uniforms;
-
 };
 #endif //__ResourceShader_H__

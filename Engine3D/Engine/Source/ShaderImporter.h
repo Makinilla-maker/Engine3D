@@ -17,7 +17,7 @@ typedef unsigned int uint;
 
 namespace ShaderImporter
 {
-	void ImportShader(std::string& path);
+	void ImportShader(std::string path);
 	void SetShaderUniforms(Shader* shader);
 	void SaveShader(uint32 shaderID, uint32 vertexID, uint32 fragmentID, std::vector<Uniform> uniforms, std::string path);
 	std::vector<Uniform> GetShaderUniforms(uint32 vertexID);

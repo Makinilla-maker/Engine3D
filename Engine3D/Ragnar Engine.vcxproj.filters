@@ -49,6 +49,9 @@
     <Filter Include="Sources\Resources\Importers">
       <UniqueIdentifier>{3c644c45-199c-460f-9c95-bb1da2fa630e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Libraries\Imgui\TextEditor">
+      <UniqueIdentifier>{2137e711-5774-4d42-9054-dfa4b0e804ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Source\Module.h">
@@ -268,6 +271,9 @@
     <ClInclude Include="Colors.h">
       <Filter>Sources\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="Dependencies\Imgui\TextEditor\TextEditor.h">
+      <Filter>Sources\Libraries\Imgui\TextEditor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Source\ModuleCamera3D.cpp">
@@ -442,6 +448,9 @@
       <Filter>Sources\Resources\Importers</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Source\Resource.cpp" />
+    <ClCompile Include="Dependencies\Imgui\TextEditor\TextEditor.cpp">
+      <Filter>Sources\Libraries\Imgui\TextEditor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Ragnar Engine.rc" />
