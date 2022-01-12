@@ -88,9 +88,8 @@ void ShaderImporter::ImportShader(std::string path)
 		ResourceManager::GetInstance()->CreateResource(ResourceType::SHADERS, path, libraryPath);
 		if (app->fs->Save(libraryPath.c_str(), buffer, size) > 0)
 			DEBUG_LOG("Shader saved!");
-		delete[] buffer;
-		RELEASE_ARRAY(buffer);
 
+		delete[] buffer;
 	}
 }
 void ShaderImporter::SetShaderUniforms(Shader* shader)
