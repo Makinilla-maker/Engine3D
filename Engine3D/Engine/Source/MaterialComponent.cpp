@@ -163,7 +163,7 @@ void MaterialComponent::OnEditor()
 		auto cpos = editor.GetCursorPosition();
 		if (ImGui::BeginMenuBar())
 		{
-			if (ImGui::BeginMenu("File"))
+			if (ImGui::Button("Save"))
 			{
 				std::string shader = editor.GetText();
 
@@ -174,9 +174,7 @@ void MaterialComponent::OnEditor()
 				glDetachShader(shadertoRecompily->parameters.shaderID, shadertoRecompily->parameters.fragmentID);
 				glDeleteProgram(shadertoRecompily->parameters.shaderID);
 
-				ShaderImporter::ImportShader(shadertoRecompily->parameters.path.c_str());
-
-				ImGui::EndMenu();
+				owner->GetComponent<MeshComponent>()->GetMaterial()->LoadShader(fileToEdit.c_str());
 			}
 			ImGui::EndMenuBar();
 		}
