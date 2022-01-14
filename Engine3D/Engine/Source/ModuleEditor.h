@@ -39,6 +39,7 @@ public:
 	inline std::string& GetCurrentDir() { return mainMenuBar.GetCurrentDir(); }
 
 	inline Viewport* GetViewport() { return viewport; }
+	GameObject* GetSelected() { return selected; }
 
 private:
 	MainMenuBar mainMenuBar;

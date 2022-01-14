@@ -289,13 +289,25 @@ void FileSystem::ImportFromOutside(std::string& source, std::string& destination
 
 	FILE* file = nullptr;
 	fopen_s(&file, source.c_str(), "rb");
+
 	
 	std::string name = source;
 	GetFilenameWithExtension(name);
 
+	ResourceType a = CheckExtension(name);
+	if (a == ResourceType::SHADERS)
+	{
+		std::string newShadePath;
+		newShadePath = "Assets\/Shaders\/" + name;
+		if(app->editor->GetSelected() != nullptr)	
+			app->editor->GetSelected()->GetComponent<MaterialComponent>()->LoadShader(newShadePath);
+	}
+
 	name = destination + name;
 	PHYSFS_file* dest = PHYSFS_openWrite(name.c_str());
 
+	///Cutrada, lo siento si estas viendo esto
+	///
 	if (file && dest)
 	{
 		while (size = fread_s(buffer, 8192, 1, 8192, file))

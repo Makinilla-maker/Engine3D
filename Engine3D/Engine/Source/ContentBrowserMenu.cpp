@@ -27,6 +27,7 @@ ContentBrowserMenu::~ContentBrowserMenu()
 	RELEASE(picIcon);
 	RELEASE(modelIcon);
 	RELEASE(sceneIcon);
+	RELEASE(shaderIcon);
 }
 
 bool ContentBrowserMenu::Start()
@@ -42,6 +43,9 @@ bool ContentBrowserMenu::Start()
 
 	sceneIcon = new Texture(-4, std::string("Settings/EngineResources/logo.rgtexture"));
 	sceneIcon->Load();
+
+	shaderIcon = new Texture(-2, std::string("Settings/EngineResources/picture.rgtexture"));
+	shaderIcon->Load();
 
 	return true;
 }
@@ -160,6 +164,9 @@ bool ContentBrowserMenu::Update(float dt)
 			break;
 		case ResourceType::SCENE:
 			ImGui::ImageButton(sceneIcon ? (ImTextureID)sceneIcon->GetId() : "", { cell, cell });
+			break;
+		case ResourceType::SHADERS:
+			ImGui::ImageButton(shaderIcon ? (ImTextureID)shaderIcon->GetId() : "", { cell, cell });
 			break;
 		}
 		if (ImGui::IsItemClicked())

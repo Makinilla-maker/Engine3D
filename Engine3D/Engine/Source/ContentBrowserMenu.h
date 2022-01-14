@@ -33,4 +33,5 @@ private:
 	Texture* picIcon;
 	Texture* modelIcon;
 	Texture* sceneIcon;
+	Texture* shaderIcon;
 };
