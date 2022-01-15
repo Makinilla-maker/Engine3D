@@ -99,25 +99,15 @@ void MaterialComponent::OnEditor()
 			ImGui::Text("Path: ");
 			ImGui::SameLine();
 			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", shader->GetPath().c_str());
-			if (ImGui::Button("Default shader", { 200,25 }))
+			std::map<uint, std::string> allShaders = ResourceManager::GetInstance()->GetShaderMap();
+			std::map<uint, std::string>::iterator it;
+			for (it = allShaders.begin(); it != allShaders.end(); ++it)
 			{
-				owner->GetComponent<MeshComponent>()->GetMaterial()->LoadShader("Assets\/Shaders\/DefaultShader.shader");
-			}
-			if (ImGui::Button("Water shader (example)", { 200,25 }))
-			{
-				owner->GetComponent<MeshComponent>()->GetMaterial()->LoadShader("Assets\/Shaders\/WaterShader.shader");
-			}
-			if (ImGui::Button("Own water shader", { 200,25 }))
-			{
-				owner->GetComponent<MeshComponent>()->GetMaterial()->LoadShader("Assets\/Shaders\/WaterShader_2n part.shader");
-			}
-			if (ImGui::Button("Reflection Shader", { 200,25 }))
-			{
-				owner->GetComponent<MeshComponent>()->GetMaterial()->LoadShader("Assets\/Shaders\/ReflectionShader.shader");
-			}
-			if (ImGui::Button("Edit Shader", { 100,25 }))
-			{
-				EditorShader(owner->GetComponent<MeshComponent>()->GetMaterial());
+				std::string a = GetNamefromPath((*it).second);
+				if (ImGui::Button(a.c_str(), {200,25}))
+				{
+					owner->GetComponent<MeshComponent>()->GetMaterial()->LoadShader((*it).second.c_str());
+				}
 			}
 		}
 		ImGui::Separator();
@@ -192,10 +182,7 @@ void MaterialComponent::OnEditor()
 	
 	if (!owner->GetComponent<MeshComponent>()->GetMaterial()->GetShader()->parameters.uniforms.empty())
 	{
-		if (ImGui::Button("Save Uniforms"))
-		{
-			//app->resources->SaveResource(owner->GetComponent<MeshComponent>()->GetMaterial()->GetShader());
-		}
+		
 	}
 		
 	ImGui::PopID();
@@ -280,21 +267,24 @@ void MaterialComponent::SetTexture(std::shared_ptr<Resource> tex)
 	diff = std::static_pointer_cast<Texture>(tex);
 }
 
+std::string MaterialComponent::GetNamefromPath(std::string path)
+{
+	size_t separator = path.find_last_of("\\/");
+	size_t dot = path.find_last_of(".");
+
+	if (separator < path.length())
+		return path.substr(separator + 1, dot - separator - 1);
+	else
+		return path.substr(0, dot);
+}
 
 void MaterialComponent::LoadShader(std::string path)
 {
 	char* buffer;
 	int size = app->fs->Load(path.c_str(), &buffer);
 
-	// Import name and path start
-	size_t separator = path.find_last_of("\\/");
-	size_t dot = path.find_last_of(".");
+	shader->parameters.name =GetNamefromPath(path);
 	shader->parameters.path = path;
-	if (separator < path.length())
-		shader->parameters.name = path.substr(separator + 1, dot - separator - 1);
-	else
-		shader->parameters.name = path.substr(0, dot);
-	//import name finish
 
 	if (size <= 0)
 	{

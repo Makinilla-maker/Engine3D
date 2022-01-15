@@ -38,52 +38,6 @@ void ShaderImporter::ImportShader(std::string path)
 			LOG("Shader: %s not found or can't be loaded.", fullPath);
 			return;
 		}
-		uint32 shaderID = 0;
-		uint32 vertexID = 0;
-		uint32 fragmentID = 0;
-		std::vector<Uniform> uniforms;
-
-		std::string file(buffer);
-		if (file.find("__Vertex_Shader__") != std::string::npos)
-		{
-			vertexID = ImportVertex(file);
-		}
-		if (file.find("__Fragment_Shader__") != std::string::npos)
-		{
-			fragmentID = ImportFragment(file);
-		}
-		if (vertexID != 0 && fragmentID != 0)
-		{
-			GLint outcome;
-			vertexID = (GLuint)vertexID;
-			fragmentID = (GLuint)fragmentID;
-
-			shaderID = glCreateProgram();
-			glAttachShader(shaderID, vertexID);
-			glAttachShader(shaderID, fragmentID);
-			glLinkProgram(shaderID);
-
-			glGetProgramiv(shaderID, GL_LINK_STATUS, &outcome);
-			if (outcome == 0)
-			{
-				GLchar info[512];
-				glGetProgramInfoLog(shaderID, 512, NULL, info);
-				LOG("Shader compiling error: %s", info);
-			}
-			else if (uniforms.size() == 0)
-			{
-				uniforms = GetShaderUniforms(shaderID);
-			}
-
-			glDeleteShader(vertexID);
-			glDeleteShader(fragmentID);
-			glDeleteShader(shaderID);
-		}
-		else
-		{
-			DEBUG_LOG("ERROR, Vertex shader: &d or Fragment shader: %d are not correctly compiled.");// , shader->vertexID, shader->fragmentID);
-		}
-
 		std::string libraryPath;
 		ResourceManager::GetInstance()->CreateResource(ResourceType::SHADERS, path, libraryPath);
 		if (app->fs->Save(libraryPath.c_str(), buffer, size) > 0)

@@ -53,6 +53,12 @@ ResourceManager::~ResourceManager()
 	meshes.clear();
 }
 
+std::map<uint, std::string> ResourceManager::GetShaderMap()
+{
+	return shaderMap;
+}
+
+
 void ResourceManager::CheckForNewResources()
 {
 
@@ -95,6 +101,8 @@ uint ResourceManager::CreateResource(ResourceType type, std::string& assets, std
 	case ResourceType::SHADERS:
 		library = SHADERS_FOLDER + std::string("shader_") + std::to_string(uid) + ".rgshader";
 		resource = std::make_shared<Shader>(uid, assets, library);
+		if (resource != nullptr) 
+			shaderMap[uid] = assets;
 		break;
 	}
 

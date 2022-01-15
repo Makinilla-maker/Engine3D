@@ -19,6 +19,8 @@ public:
 	static void ReleaseInstance();
 	~ResourceManager();
 
+	std::map<uint, std::string> GetShaderMap();
+
 	void CheckForNewResources();
 
 	uint CreateResource(ResourceType type, std::string& assets, std::string& library);
@@ -44,7 +46,6 @@ public:
 	Mesh* IsMeshLoaded(std::string path);
 	void RemoveMesh(Mesh* mesh);
 
-	std::map<uint32, Shader*> GetShadersInMemory();
 
 
 private:
@@ -53,6 +54,7 @@ private:
 	static ResourceManager* instance;
 
 	std::map<uint, std::shared_ptr<Resource>> map;
+	std::map<uint, std::string> shaderMap;
 	std::vector<Texture*> textures;
 	std::vector<Mesh*> meshes;
 };

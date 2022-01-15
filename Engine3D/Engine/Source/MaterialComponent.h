@@ -41,6 +41,8 @@ public:
 	uint32 const GetShaderID() { return shader->parameters.shaderID; }
 	std::shared_ptr<Texture> getTexture() { return diff; }
 
+	std::string GetNamefromPath(std::string path);
+
 	void LoadShader(std::string path);
 private:
 	bool checker;
