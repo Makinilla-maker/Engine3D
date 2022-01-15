@@ -73,16 +73,20 @@ void MeshComponent::Draw()
 	glMultMatrixf(transform->GetGlobalTransform().Transposed().ptr());
 	
 	if (material != nullptr && material->GetActive()) material->BindTexture();
-	
+	// AAAA
 	if (shaderProgram != 0)
 	{
 		material->GetShader()->SetUniform1i("hasTexture", (GLint)true);
 
 		material->GetShader()->SetUniformMatrix4("modelMatrix", transform->GetLocalTransform().Transposed().ptr());
 
-		material->GetShader()->SetUniformMatrix4("viewMatrix", app->camera->GetRawViewMatrix());
 
-		material->GetShader()->SetUniformMatrix4("projectionMatrix", app->camera->GetProjectionMatrix());
+		//
+		material->GetShader()->SetUniformMatrix4("viewMatrix", app->scene->mainCamera->GetRawViewMatrix());
+
+		material->GetShader()->SetUniformMatrix4("projectionMatrix", app->scene->mainCamera->GetProjectionMatrix());
+
+		//
 
 		material->GetShader()->SetUniform1f("time", a);
 
@@ -105,6 +109,64 @@ void MeshComponent::Draw()
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	a+=0.05;
+}
+
+void MeshComponent::DrawScene()
+{
+	uint32 shaderProgram = 0;
+	if (material != nullptr)
+	{
+		if (material->GetShader())
+			shaderProgram = material->GetShaderID();
+		shaderProgram ? shaderProgram : shaderProgram = SetDefaultShader();
+	}
+
+
+	glUseProgram(shaderProgram);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	glPushMatrix();
+	glMultMatrixf(transform->GetGlobalTransform().Transposed().ptr());
+
+	if (material != nullptr && material->GetActive()) material->BindTexture();
+	// AAAA
+	if (shaderProgram != 0)
+	{
+		material->GetShader()->SetUniform1i("hasTexture", (GLint)true);
+
+		material->GetShader()->SetUniformMatrix4("modelMatrix", transform->GetLocalTransform().Transposed().ptr());
+
+
+		//
+		material->GetShader()->SetUniformMatrix4("viewMatrix", app->camera->GetRawViewMatrix());
+
+		material->GetShader()->SetUniformMatrix4("projectionMatrix", app->camera->GetProjectionMatrix());
+
+		//
+
+		material->GetShader()->SetUniform1f("time", a);
+
+		material->GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&app->camera->cameraFrustum.Pos());
+
+		ShaderImporter::SetShaderUniforms(material->GetShader());
+	}
+	if (material != nullptr)
+	{
+		if (material->GetShader())	material->GetShader()->SetUniform1f("time", a);
+	}
+
+	if (mesh != nullptr) mesh->Draw(verticesNormals, faceNormals, colorNormal, normalLength);
+
+	if (material != nullptr && material->GetActive()) material->UnbindTexture();
+
+	glUseProgram(0);
+	glPopMatrix();
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	a += 0.05;
 }
 
 void MeshComponent::DrawOutline()

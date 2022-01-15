@@ -36,6 +36,27 @@ public:
 	{
 		return camera.Pos();
 	}
+
+	float* GetRawViewMatrix()
+	{
+		static float4x4 m;
+
+		m = camera.ViewMatrix();
+		m.Transpose();
+
+		return (float*)m.v;
+	}
+
+	float* GetProjectionMatrix()
+	{
+		static float4x4 m;
+
+		m = camera.ProjectionMatrix();
+		m.Transpose();
+
+		return (float*)m.v;
+	}
+
 private:
 
 	Frustum camera;

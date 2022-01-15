@@ -26,6 +26,7 @@ public:
 
 	bool Update(float dt);
 	void Draw();
+	void DrawScene();
 	void DrawOutline();
 	void DrawEditor();
 

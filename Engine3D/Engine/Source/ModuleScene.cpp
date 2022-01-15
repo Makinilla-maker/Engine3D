@@ -30,13 +30,15 @@ bool ModuleScene::Start()
 	GameObject* camera = CreateGameObject(nullptr);
 	camera->CreateComponent(ComponentType::CAMERA);
 	camera->SetName("Camera");
-	
+	camera->GetComponent<TransformComponent>()->SetTransform(float3(0, 16.83,-50.81), Quat(0,0,0,0), float3(1,1,1));
+	// AAAA
 	qTree.Create(AABB(float3(-200, -50, -200), float3(200, 50, 200)));
 	
 	ResourceManager::GetInstance()->ImportResourcesFromLibrary();
 	ResourceManager::GetInstance()->ImportAllResources();
 	ImportPrimitives();
-	ResourceManager::GetInstance()->LoadResource(std::string("Assets/Resources/Street.fbx"));
+	ResourceManager::GetInstance()->LoadResource(std::string("Assets/Resources/WaterPlane.FBX"));
+
 
 	return true;
 }
@@ -133,7 +135,7 @@ bool ModuleScene::Draw()
 
 		if (go->GetActive())
 		{
-			go->Draw();
+			go->DrawScene();
 
 			for (int i = 0; i < go->GetChilds().size(); ++i)
 				stack.push(go->GetChilds()[i]);

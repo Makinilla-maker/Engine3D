@@ -142,7 +142,7 @@ void MaterialComponent::OnEditor()
 	}
 	if (showShaderMenu)
 	{
-		ImGui::Begin("Textures", &showShaderMenu);
+		ImGui::Begin("Shaders", &showShaderMenu);
 		ImVec2 winPos = ImGui::GetWindowPos();
 		ImVec2 size = ImGui::GetWindowSize();
 		ImVec2 mouse = ImGui::GetIO().MousePos;

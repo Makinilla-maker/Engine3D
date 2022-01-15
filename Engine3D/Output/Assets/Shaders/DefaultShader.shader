@@ -9,12 +9,12 @@ layout(location = 2) in vec3 texCoord;
 out vec4 ourColor;
 out vec2 TexCoord;
 
-uniform mat4 model_matrix;
-uniform mat4 view;
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
 uniform mat4 projection;
 void main()
 {
-    gl_Position = projection * view * model_matrix * vec4(position, 1.0f);
+    gl_Position = projection * viewMatrix * modelMatrix * vec4(position, 1.0f);
     ourColor = color;
     TexCoord = texCoord;
 }

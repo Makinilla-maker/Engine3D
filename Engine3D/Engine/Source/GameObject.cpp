@@ -74,6 +74,29 @@ void GameObject::Draw()
 	}
 }
 
+void GameObject::DrawScene()
+{
+	// TODO: Check this in the future
+	//if (!GetAllComponent<MeshComponent>().empty())
+	//{
+	//	for (int i = 0; i < GetAllComponent<MeshComponent>().size(); ++i)
+	//	{
+	//		GetAllComponent<MeshComponent>()[i]->Draw();
+	//	}
+	//}
+	for (int i = 0; i < components.size(); ++i)
+	{
+		Component* component = components[i];
+		if (component->GetActive())
+			component->DrawScene();
+	}
+
+	if (index && vertex && colliders)
+	{
+		DebugColliders();
+	}
+}
+
 void GameObject::DrawOutline()
 {
 	for (int i = 0; i < components.size(); ++i)

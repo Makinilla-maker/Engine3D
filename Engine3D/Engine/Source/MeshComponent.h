@@ -26,6 +26,7 @@ public:
 	uint32 SetDefaultShader();
 
 	void Draw() override;
+	void DrawScene() override;
 	void DrawOutline() override;
 	void OnEditor() override;
 
