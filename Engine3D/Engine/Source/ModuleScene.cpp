@@ -38,6 +38,7 @@ bool ModuleScene::Start()
 	ResourceManager::GetInstance()->ImportAllResources();
 	ImportPrimitives();
 	ResourceManager::GetInstance()->LoadResource(std::string("Assets/Resources/WaterPlane.FBX"));
+	//ResourceManager::GetInstance()->LoadResource(std::string("Assets/Resources/Street.fbx"));
 
 
 	return true;
