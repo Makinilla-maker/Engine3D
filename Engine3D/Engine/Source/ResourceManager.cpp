@@ -127,6 +127,8 @@ void ResourceManager::CreateResourceCreated(ResourceType type, uint uid, std::st
 		break;
 	case ResourceType::SHADERS:
 		resource = std::make_shared<Shader>(uid, assets, library);
+		if (resource != nullptr)
+			shaderMap[uid] = assets;
 		break;
 	default:
 		break;

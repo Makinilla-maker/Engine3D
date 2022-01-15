@@ -95,20 +95,14 @@ void MaterialComponent::OnEditor()
 		{
 			ImGui::Text("Selected Shader: ");
 			ImGui::SameLine();
-			ImGui::Text(shader->parameters.name.c_str());
+			if (ImGui::Button(shader ? shader->parameters.name.c_str() : ""))
+			{
+				showShaderMenu = true;
+			}
 			ImGui::Text("Path: ");
 			ImGui::SameLine();
 			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", shader->GetPath().c_str());
-			std::map<uint, std::string> allShaders = ResourceManager::GetInstance()->GetShaderMap();
-			std::map<uint, std::string>::iterator it;
-			for (it = allShaders.begin(); it != allShaders.end(); ++it)
-			{
-				std::string a = GetNamefromPath((*it).second);
-				if (ImGui::Button(a.c_str(), {200,25}))
-				{
-					owner->GetComponent<MeshComponent>()->GetMaterial()->LoadShader((*it).second.c_str());
-				}
-			}
+			if (ImGui::Button("Edit Shader", { 100,25 }))	EditorShader(owner->GetComponent<MeshComponent>()->GetMaterial());
 		}
 		ImGui::Separator();
 	}
@@ -143,7 +137,30 @@ void MaterialComponent::OnEditor()
 				}
 			}
 		}
-
+		
+		ImGui::End();
+	}
+	if (showShaderMenu)
+	{
+		ImGui::Begin("Textures", &showShaderMenu);
+		ImVec2 winPos = ImGui::GetWindowPos();
+		ImVec2 size = ImGui::GetWindowSize();
+		ImVec2 mouse = ImGui::GetIO().MousePos;
+		if (!(mouse.x < winPos.x + size.x && mouse.x > winPos.x &&
+			mouse.y < winPos.y + size.y && mouse.y > winPos.y))
+		{
+			if (ImGui::GetIO().MouseClicked[0]) showShaderMenu = false;
+		}
+		std::map<uint, std::string> allShaders = ResourceManager::GetInstance()->GetShaderMap();
+		std::map<uint, std::string>::iterator it;
+		for (it = allShaders.begin(); it != allShaders.end(); ++it)
+		{
+			std::string a = GetNamefromPath((*it).second);
+			if (ImGui::Selectable(a.c_str()))//, { 200,25 }))
+			{
+				owner->GetComponent<MeshComponent>()->GetMaterial()->LoadShader((*it).second.c_str());
+			}
+		}
 		ImGui::End();
 	}
 	if (showShaderEditor)

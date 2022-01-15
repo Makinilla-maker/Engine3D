@@ -303,7 +303,15 @@ void FileSystem::ImportFromOutside(std::string& source, std::string& destination
 			app->editor->GetSelected()->GetComponent<MaterialComponent>()->LoadShader(newShadePath);
 	}
 
-	name = destination + name;
+	if (a == ResourceType::SHADERS)
+	{
+		name = "Assets\/Shaders\/" + name;
+	}
+	else
+	{
+		name = destination + name;
+	}
+
 	PHYSFS_file* dest = PHYSFS_openWrite(name.c_str());
 
 	///Cutrada, lo siento si estas viendo esto
