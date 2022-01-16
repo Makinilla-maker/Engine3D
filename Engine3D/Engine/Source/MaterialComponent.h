@@ -26,7 +26,6 @@ public:
 
 	void ShowUniforms();
 
-	void EditorShader(MaterialComponent* material);
 
 	bool OnLoad(JsonParsing& node) override;
 	bool OnSave(JsonParsing& node, JSON_Array* array) override;
@@ -37,24 +36,14 @@ public:
 	void SetTexture(std::shared_ptr<Resource> tex);
 	//inline void SetColor(Color color) { this->color = color; }
 	//inline Color GetColor() const { return color; }
-	inline Shader* const GetShader() { return shader; }
-	uint32 const GetShaderID() { return shader->parameters.shaderID; }
+	
 	std::shared_ptr<Texture> getTexture() { return diff; }
 
-	std::string GetNamefromPath(std::string path);
-
-	void LoadShader(std::string path);
 private:
 	bool checker;
 	bool showTexMenu;
 	bool showShaderMenu;
-	bool showShaderEditor;
 
 	std::shared_ptr<Texture> diff;
-	Shader* shader;
 
-	Shader* shadertoRecompily;
-
-	TextEditor editor;
-	std::string fileToEdit;
 };

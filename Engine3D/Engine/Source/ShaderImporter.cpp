@@ -206,36 +206,3 @@ void ShaderImporter::CreateMetaShader(std::string& path, ShaderParameters& data,
 
 	RELEASE_ARRAY(buffer);
 }
-void ShaderImporter::losientomama(uint32 shaderID, uint32 vertexID, uint32 fragmentID, std::vector<Uniform> uniforms, std::string path)
-{
-	/*
-	JsonConfig jsonFile;
-	ArrayConfig jsonArrray = jsonFile.SetArray("Uniforms");
-
-	for (uint i = 0; i < uniforms.size(); i++)
-	{
-		JsonConfig& node = jsonArrray.AddNode();
-		node.SetString("Name", uniforms[i].name);
-		node.SetInteger("Type", (int)uniforms[i].uniformType);
-		switch (uniforms[i].uniformType)
-		{
-			//case  UniformType::BOOL: node.SetInteger("Value", shader->uniforms[i].boolean); break;
-		case  UniformType::INT: node.SetInteger("Value", uniforms[i].integer); break;
-		case  UniformType::FLOAT: node.SetNumber("Value", uniforms[i].floatNumber); break;
-		case  UniformType::INT_VEC2: node.SetFloat2("Value", uniforms[i].vec2); break;
-		case  UniformType::INT_VEC3: node.SetFloat3("Value", uniforms[i].vec3); break;
-		case  UniformType::INT_VEC4: node.SetFloat4("Value", uniforms[i].vec4); break;
-		case  UniformType::FLOAT_VEC2: node.SetFloat2("Value", uniforms[i].vec2); break;
-		case  UniformType::FLOAT_VEC3: node.SetFloat3("Value", uniforms[i].vec3); break;
-		case  UniformType::FLOAT_VEC4: node.SetFloat4("Value", uniforms[i].vec4); break;
-		}
-	}
-
-	char** buffer = nullptr;
-	uint size = jsonFile.SerializeConfig(buffer);
-		
-	app->fs->Save(path.c_str(), buffer, size);
-
-	RELEASE_ARRAY(buffer);*/
-}
-

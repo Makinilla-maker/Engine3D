@@ -300,7 +300,7 @@ void FileSystem::ImportFromOutside(std::string& source, std::string& destination
 		std::string newShadePath;
 		newShadePath = "Assets\/Shaders\/" + name;
 		if(app->editor->GetSelected() != nullptr)	
-			app->editor->GetSelected()->GetComponent<MaterialComponent>()->LoadShader(newShadePath);
+			app->editor->GetSelected()->GetComponent<MeshComponent>()->LoadShader(newShadePath);
 	}
 
 	if (a == ResourceType::SHADERS)

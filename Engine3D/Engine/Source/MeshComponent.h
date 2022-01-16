@@ -37,11 +37,28 @@ public:
 
 	inline void SetTransform(TransformComponent* trans) { transform = trans; }
 	inline void SetMaterial(MaterialComponent* mat) { material = mat; }
-	//inline void SetShader(std::shared_ptr<Shader> shader) { material->SetShader(shader); }
 	MaterialComponent* GetMaterial() { return material; }
+
+	void EditorShader();
+
+	inline Shader* const GetShader() { return shader; }
+	uint32 const GetShaderID() { return shader->parameters.shaderID; }
 
 	inline AABB GetLocalAABB() { return localBoundingBox; }
 	const std::shared_ptr<Mesh> GetMesh() const { return mesh; }
+
+	std::string GetNamefromPath(std::string path);
+
+	void LoadShader(std::string path);
+
+public:
+
+	Shader* shadertoRecompily;
+
+	TextEditor editor;
+	std::string fileToEdit;
+	bool showShaderEditor;
+
 private:
 	TransformComponent* transform;
 	MaterialComponent* material;
@@ -51,6 +68,8 @@ private:
 	
 	bool faceNormals;
 	bool verticesNormals;
+
+	Shader* shader;
 
 	std::shared_ptr<Mesh> mesh;
 

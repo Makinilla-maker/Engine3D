@@ -70,6 +70,7 @@ public:
 
 	void SetUniform1f(std::string name, GLfloat value);
 	void SetUniform1i(std::string name, GLint value);
+
 	std::string GetPath() { return parameters.path; }
 
 	void Load() override;
@@ -79,4 +80,5 @@ public:
 	ShaderParameters parameters;
 
 };
+
 #endif //__ResourceShader_H__
