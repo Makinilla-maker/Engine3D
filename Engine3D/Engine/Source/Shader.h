@@ -59,17 +59,17 @@ public:
 	Shader(uint uid, std::string& assets, std::string& library);
 	~Shader();
 
-	void SetUniformMatrix4(std::string name, GLfloat* value);
-	void SetUniformVec2f(std::string name, GLfloat* value);
-	void SetUniformVec3f(std::string name, GLfloat* value);
-	void SetUniformVec4f(std::string name, GLfloat* value);
+	void SetMatrix4(std::string name, GLfloat* value);
+	void SetVec2f(std::string name, GLfloat* value);
+	void SetVec3f(std::string name, GLfloat* value);
+	void SetVec4f(std::string name, GLfloat* value);
 
-	void SetUniformVec2i(std::string name, GLint* value);
-	void SetUniformVec3i(std::string name, GLint* value);
-	void SetUniformVec4i(std::string name, GLint* value);
+	void SetVec2i(std::string name, GLint* value);
+	void SetVec3i(std::string name, GLint* value);
+	void SetVec4i(std::string name, GLint* value);
 
-	void SetUniform1f(std::string name, GLfloat value);
-	void SetUniform1i(std::string name, GLint value);
+	void Set1f(std::string name, GLfloat value);
+	void Set1i(std::string name, GLint value);
 
 	std::string GetPath() { return parameters.path; }
 

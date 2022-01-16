@@ -77,21 +77,21 @@ void MeshComponent::Draw()
 
 	if (shaderProgram != 0)
 	{
-		GetShader()->SetUniform1i("hasTexture", (GLint)true);
+		GetShader()->Set1i("hasTexture", (GLint)true);
 
-		GetShader()->SetUniformMatrix4("modelMatrix", transform->GetLocalTransform().Transposed().ptr());
+		GetShader()->SetMatrix4("modelMatrix", transform->GetLocalTransform().Transposed().ptr());
 
-		GetShader()->SetUniformMatrix4("viewMatrix", app->scene->mainCamera->GetRawViewMatrix());
+		GetShader()->SetMatrix4("viewMatrix", app->scene->mainCamera->GetRawViewMatrix());
 
-		GetShader()->SetUniformMatrix4("projectionMatrix", app->scene->mainCamera->GetProjectionMatrix());
+		GetShader()->SetMatrix4("projectionMatrix", app->scene->mainCamera->GetProjectionMatrix());
 
-		GetShader()->SetUniform1f("time", a);
+		GetShader()->Set1f("time", a);
 
-		GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&app->camera->cameraFrustum.Pos());
+		GetShader()->SetVec3f("cameraPosition", (GLfloat*)&app->camera->cameraFrustum.Pos());
 
 		ShaderImporter::SetShaderUniforms(GetShader());
 	}
-	if (GetShader())	GetShader()->SetUniform1f("time", a);
+	if (GetShader())	GetShader()->Set1f("time", a);
 	
 
 	if (mesh != nullptr) mesh->Draw(verticesNormals, faceNormals, colorNormal, normalLength);
@@ -126,21 +126,21 @@ void MeshComponent::DrawScene()
 
 	if (shaderProgram != 0)
 	{
-		GetShader()->SetUniform1i("hasTexture", (GLint)true);
+		GetShader()->Set1i("hasTexture", (GLint)true);
 
-		GetShader()->SetUniformMatrix4("modelMatrix", transform->GetLocalTransform().Transposed().ptr());
+		GetShader()->SetMatrix4("modelMatrix", transform->GetLocalTransform().Transposed().ptr());
 
-		GetShader()->SetUniformMatrix4("viewMatrix", app->camera->GetRawViewMatrix());
+		GetShader()->SetMatrix4("viewMatrix", app->camera->GetRawViewMatrix());
 
-		GetShader()->SetUniformMatrix4("projectionMatrix", app->camera->GetProjectionMatrix());
+		GetShader()->SetMatrix4("projectionMatrix", app->camera->GetProjectionMatrix());
 
-		GetShader()->SetUniform1f("time", a);
+		GetShader()->Set1f("time", a);
 
-		GetShader()->SetUniformVec3f("cameraPosition", (GLfloat*)&app->camera->cameraFrustum.Pos());
+		GetShader()->SetVec3f("cameraPosition", (GLfloat*)&app->camera->cameraFrustum.Pos());
 
 		ShaderImporter::SetShaderUniforms(GetShader());
 	}
-	if (GetShader())	GetShader()->SetUniform1f("time", a);
+	if (GetShader())	GetShader()->Set1f("time", a);
 	
 
 	if (mesh != nullptr) mesh->Draw(verticesNormals, faceNormals, colorNormal, normalLength);
@@ -338,7 +338,7 @@ void MeshComponent::LoadShader(std::string path)
 	}
 	if (shader->parameters.vertexID != 0 && shader->parameters.fragmentID != 0)
 	{
-		GLint outcome;
+		GLint out;
 		shader->parameters.vertexID = (GLuint)shader->parameters.vertexID;
 		shader->parameters.fragmentID = (GLuint)shader->parameters.fragmentID;
 
@@ -347,12 +347,12 @@ void MeshComponent::LoadShader(std::string path)
 		glAttachShader(shader->parameters.shaderID, shader->parameters.fragmentID);
 		glLinkProgram(shader->parameters.shaderID);
 
-		glGetProgramiv(shader->parameters.shaderID, GL_LINK_STATUS, &outcome);
-		if (outcome == 0)
+		glGetProgramiv(shader->parameters.shaderID, GL_LINK_STATUS, &out);
+		if (out == 0)
 		{
-			GLchar info[512];
-			glGetProgramInfoLog(shader->parameters.shaderID, 512, NULL, info);
-			LOG("Shader compiling error: %s", info);
+			GLchar why[512];
+			glGetProgramInfoLog(shader->parameters.shaderID, 512, NULL, why);
+			DEBUG_LOG("Shader compiling error: %s", why);
 		}
 		else if (shader->parameters.uniforms.size() == 0)
 		{
@@ -365,7 +365,7 @@ void MeshComponent::LoadShader(std::string path)
 	}
 	else
 	{
-		LOG("ERROR, Vertex shader: &d or Fragment shader: %d are not correctly compiled.", shader->vertexID, shader->fragmentID);
+		DEBUG_LOG("ERROR, Vertex shader: &d or Fragment shader: %d are not correctly compiled.", shader->parameters.vertexID, shader->parameters.fragmentID);
 	}
 	delete[] buffer;
 }

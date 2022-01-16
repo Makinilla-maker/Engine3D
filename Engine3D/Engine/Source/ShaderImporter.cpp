@@ -53,14 +53,14 @@ void ShaderImporter::SetShaderUniforms(Shader* shader)
 		switch (shader->parameters.uniforms[i].uniformType)
 		{
 			//case UniformType::BOOL: shader->SetUniform1i(shader->uniforms[i].name.c_str(), shader->uniforms[i].boolean); break;
-		case  UniformType::INT: shader->SetUniform1i(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].integer); break;
-		case  UniformType::FLOAT: shader->SetUniform1f(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].floatNumber); break;
-		case  UniformType::INT_VEC2: shader->SetUniformVec2f(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].vec2.ptr()); break;
-		case  UniformType::INT_VEC3: shader->SetUniformVec3f(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].vec3.ptr()); break;
-		case  UniformType::INT_VEC4: shader->SetUniformVec4f(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].vec4.ptr()); break;
-		case  UniformType::FLOAT_VEC2: shader->SetUniformVec2i(shader->parameters.uniforms[i].name.c_str(), (GLint*)shader->parameters.uniforms[i].vec2.ptr()); break;
-		case  UniformType::FLOAT_VEC3: shader->SetUniformVec3i(shader->parameters.uniforms[i].name.c_str(), (GLint*)shader->parameters.uniforms[i].vec3.ptr()); break;
-		case  UniformType::FLOAT_VEC4: shader->SetUniformVec4i(shader->parameters.uniforms[i].name.c_str(), (GLint*)shader->parameters.uniforms[i].vec4.ptr()); break;
+		case  UniformType::INT: shader->Set1i(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].integer); break;
+		case  UniformType::FLOAT: shader->Set1f(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].floatNumber); break;
+		case  UniformType::INT_VEC2: shader->SetVec2f(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].vec2.ptr()); break;
+		case  UniformType::INT_VEC3: shader->SetVec3f(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].vec3.ptr()); break;
+		case  UniformType::INT_VEC4: shader->SetVec4f(shader->parameters.uniforms[i].name.c_str(), shader->parameters.uniforms[i].vec4.ptr()); break;
+		case  UniformType::FLOAT_VEC2: shader->SetVec2i(shader->parameters.uniforms[i].name.c_str(), (GLint*)shader->parameters.uniforms[i].vec2.ptr()); break;
+		case  UniformType::FLOAT_VEC3: shader->SetVec3i(shader->parameters.uniforms[i].name.c_str(), (GLint*)shader->parameters.uniforms[i].vec3.ptr()); break;
+		case  UniformType::FLOAT_VEC4: shader->SetVec4i(shader->parameters.uniforms[i].name.c_str(), (GLint*)shader->parameters.uniforms[i].vec4.ptr()); break;
 		default: break;
 		}
 	}
