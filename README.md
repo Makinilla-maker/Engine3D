@@ -14,8 +14,13 @@ Welcome to the HiveMind Engine webpage, here, we will tell you all the things yo
 Our fantastic team is compound by:
 
 - [Mario Hernandez](https://github.com/MHF13) (Code & Debugging)
+<img src="https://media.discordapp.net/attachments/925431086643810376/932642713935962193/20210517_230901.jpg" width="330" height="355">
+
 - [Oriol Valverde](https://github.com/Makinilla-maker) (Code & Debugging)
+<img src="https://media.discordapp.net/attachments/925431086643810376/932641444206903336/1642429426686.jpg" width="330" height="355">
+
 - [Marc Ruiz](https://github.com/Ruizo) (Code & Production)
+<img src="https://media.discordapp.net/attachments/925431086643810376/932644266726019132/Ruizo.jpg" width="330" height="355">
 
 ## Controls
 - WASD to move the camera in X's axis and Z's axis.
