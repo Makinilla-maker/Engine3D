@@ -45,10 +45,6 @@ framebuffer and the user can visualize both at the same time.
 - Mouse wheel should zoom in and out
 - Right Click to delete the GameObject in hierarchy
 
-In Asset List:
-- Can create folders with the button "Create folders"
-- Once you have selected a folder, you can delete it by pressing DELETE.
-
 ## GitHub
 https://github.com/Makinilla-maker/Engine3D
 
