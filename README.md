@@ -5,7 +5,8 @@ AUTORS:[Lucas Pérez](https://github.com/LucasPG14). and [Oriol Bernal](https://
 
 ## Description
 
-HiveMind engine is a project from [Mario Hernandez](https://github.com/MHF13), [Oriol Valverde](https://github.com/Makinilla-maker), [Marc Ruiz](https://github.com/Ruizo) group of students from CITY university.
+HiveMind engine is a project from [Mario Hernandez](https://github.com/MHF13), [Oriol Valverde](https://github.com/Makinilla-maker), [Marc Ruiz](https://github.com/Ruizo) group of students from CITM university.
+The project we forked has an error that appears when you minimize it.
 
 ## Features:
 
@@ -27,6 +28,14 @@ framebuffer and the user can visualize both at the same time.
 - We have the "library" folder where the metadata is stored.
 - The camera object has a guizmo for the frustrum.
 
+### Engine v1.0
+- The engine uses a shader pipeline to draw geometry.
+- Editing a shader in-engine automatically compiles and applies the changes.
+- Plane with shaders in the middle of the scene that simulates water.
+- Uniforms values can be edited from the inspector.
+- Compile error lines and messages are shown in the console.
+- Drag and drop creates an error the first time you drop a file but if you omit it and try it again, works properly.
+
 ## Controls
 - WASD to move the camera in X's axis and Z's axis.
 - RightClick to rotate the main camera.
@@ -34,7 +43,7 @@ framebuffer and the user can visualize both at the same time.
 - Pressing “f” should focus the camera around the geometry.
 - Holding SHIFT duplicates movement speed.
 - Mouse wheel should zoom in and out
-- DELETE button to remove gameObjects
+- Right Click to delete the GameObject in hierarchy
 
 In Asset List:
 - Can create folders with the button "Create folders"
