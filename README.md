@@ -78,7 +78,7 @@ Our shaders options are the following:
 ## Video demonstration
 
 **Click on the image to watch it**
-![image(https://user-images.githubusercontent.com/26566780/149786412-2c5bf654-6c1d-4ec1-802b-6e7cea027a84.png)](https://www.youtube.com/watch?v=MXaEAYEwtGM)
+[![image](https://user-images.githubusercontent.com/26566780/149786412-2c5bf654-6c1d-4ec1-802b-6e7cea027a84.png)](https://www.youtube.com/watch?v=MXaEAYEwtGM)
 
 
 ## GitHub
