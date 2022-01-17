@@ -19,7 +19,7 @@ Our fantastic team is compound by:
 
 
 
-<img src="https://media.discordapp.net/attachments/925431086643810376/932642713935962193/20210517_230901.jpg" width="330" height="355">
+
 
 
 
@@ -29,14 +29,15 @@ Our fantastic team is compound by:
 
 
 
-<img src="https://media.discordapp.net/attachments/925431086643810376/932640776192679936/1642429273956.jpg" width="330" height="355">
+
 
 
 - [Marc Ruiz](https://github.com/Ruizo) (Code & Production)
 
 
 
-
+<img src="https://media.discordapp.net/attachments/925431086643810376/932642713935962193/20210517_230901.jpg" width="330" height="355">
+<img src="https://media.discordapp.net/attachments/925431086643810376/932640776192679936/1642429273956.jpg" width="330" height="355">
 <img src="https://media.discordapp.net/attachments/925431086643810376/932644266726019132/Ruizo.jpg" width="330" height="355">
 
 ## Controls
