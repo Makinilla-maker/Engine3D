@@ -255,6 +255,8 @@ bool MeshComponent::OnLoad(JsonParsing& node)
 		owner->SetAABB(localBoundingBox);
 	}
 
+	LoadShader(node.GetJsonString("Shader Path"));
+
 	return true;
 }
 
@@ -265,6 +267,7 @@ bool MeshComponent::OnSave(JsonParsing& node, JSON_Array* array)
 	file.SetNewJsonNumber(file.ValueToObject(file.GetRootValue()), "Type", (int)type);
 	file.SetNewJsonString(file.ValueToObject(file.GetRootValue()), "Path", mesh->GetAssetsPath().c_str());
 	file.SetNewJsonBool(file.ValueToObject(file.GetRootValue()), "Active", active);
+	file.SetNewJsonString(file.ValueToObject(file.GetRootValue()), "Shader Path", shader->parameters.path.c_str());
 
 	node.SetValueToArray(array, file.GetRootValue());
 

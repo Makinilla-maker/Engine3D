@@ -99,6 +99,7 @@ void MaterialComponent::OnEditor()
 			ImGui::SameLine();
 			ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", meshCom->GetShader()->GetPath().c_str());
 			if (ImGui::Button("Edit Shader", { 100,25 }))	meshCom->EditorShader();
+			ShowUniforms();
 		}
 		ImGui::Separator();
 	}
@@ -191,7 +192,7 @@ void MaterialComponent::OnEditor()
 		ImGui::End();
 	}
 
-	ShowUniforms();
+	//ShowUniforms();
 	
 	if (!meshCom->GetShader()->parameters.uniforms.empty())
 	{

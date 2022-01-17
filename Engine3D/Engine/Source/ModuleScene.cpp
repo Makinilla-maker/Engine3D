@@ -27,19 +27,20 @@ bool ModuleScene::Start()
 {
 	RG_PROFILING_FUNCTION("Starting Scene");
 
-	GameObject* camera = CreateGameObject(nullptr);
+	/*GameObject* camera = CreateGameObject(nullptr);
 	camera->CreateComponent(ComponentType::CAMERA);
 	camera->SetName("Camera");
-	camera->GetComponent<TransformComponent>()->SetTransform(float3(0, 16.83,-50.81), Quat(0,0,0,0), float3(1,1,1));
+	camera->GetComponent<TransformComponent>()->SetTransform(float3(0, 16.83,-50.81), Quat(0,0,0,0), float3(1,1,1));*/
 	// AAAA
 	qTree.Create(AABB(float3(-200, -50, -200), float3(200, 50, 200)));
 	
 	ResourceManager::GetInstance()->ImportResourcesFromLibrary();
 	ResourceManager::GetInstance()->ImportAllResources();
 	ImportPrimitives();
-	ResourceManager::GetInstance()->LoadResource(std::string("Assets/Resources/WaterPlane.FBX"));
+	//ResourceManager::GetInstance()->LoadResource(std::string("Assets/Resources/WaterPlane.FBX"));
 	//ResourceManager::GetInstance()->LoadResource(std::string("Assets/Resources/Street.fbx"));
-
+	
+	LoadScene("Assets/Scenes/WaterScene.ragnar");
 
 	return true;
 }
@@ -478,7 +479,7 @@ void ModuleScene::Play()
 
 void ModuleScene::Stop()
 {
-	LoadScene("Assets/Scenes/scenePlay.ragnar");
+	LoadScene("Assets/Scenes/WaterScene.ragnar");
 	app->fs->RemoveFile("Assets/Scenes/scenePlay.ragnar");
 	qTree.Clear();
 	qTree.Create(AABB(float3(-200, -50, -200), float3(200, 50, 200)));
