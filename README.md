@@ -76,7 +76,10 @@ Our shaders options are the following:
 <img src="Web/gif2.gif">
 
 ## Video demonstration
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=MXaEAYEwtGM" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+**Click on the image to watch it**
+![image(https://user-images.githubusercontent.com/26566780/149786412-2c5bf654-6c1d-4ec1-802b-6e7cea027a84.png)](https://www.youtube.com/watch?v=MXaEAYEwtGM)
+
 
 ## GitHub
 https://github.com/Makinilla-maker/Engine3D
