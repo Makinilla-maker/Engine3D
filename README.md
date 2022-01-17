@@ -3,6 +3,8 @@
 THIS PROJECTS IS A FORK FROM: [Ragnar Engine](https://github.com/UriKurae/Ragnar-Engine).
 AUTORS:[Lucas Pérez](https://github.com/LucasPG14). and [Oriol Bernal](https://github.com/UriKurae).
 
+<img src="Web/gif1.gif">
+
 ## Description
 
 HiveMind engine is a project from [Mario Hernandez](https://github.com/MHF13), [Oriol Valverde](https://github.com/Makinilla-maker), [Marc Ruiz](https://github.com/Ruizo) group of students from CITM university.
