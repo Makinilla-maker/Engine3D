@@ -9,7 +9,7 @@ AUTORS:[Lucas Pérez](https://github.com/LucasPG14). and [Oriol Bernal](https://
 
 Welcome to the HiveMind Engine webpage, here, we will tell you all the things you should know about our little engine which we made with all our love and passion for the subject "videogame engines" at CITM university. For this subject, we had our skills tested at our maximum level as we had to pour everything we learnt on our career about programming and create a functional engine that people could use to create videogames. This has been a big challenge but we are proud to announce that our engine has been finished and is fully functional! We have been tasked with the making of the shaders components and you can test it by yourself! But before telling you how to do such things, let's present the team.
 
-##Team
+## Team
 
 Our fantastic team is compound by:
 
@@ -62,7 +62,7 @@ In this subject, the main goal was to create a videogame engine that could execu
 - Use pre-existing shaders.
 - Play with our sub-system to know more about it!
 
-##Shaders
+## Shaders
 
 <img src="Web/gif1.gif">
 
