@@ -15,30 +15,13 @@ Our fantastic team is compound by:
 
 - [Mario Hernandez](https://github.com/MHF13) (Code & Debugging)
 
-
-
-
-
-
-
-
-
 - [Oriol Valverde](https://github.com/Makinilla-maker) (Code & Debugging)
-
-
-
-
-
-
-
 
 - [Marc Ruiz](https://github.com/Ruizo) (Code & Production)
 
+![team photo](https://user-images.githubusercontent.com/26566780/149793241-7b1570ac-d25f-484b-ba3a-d356cff110ca.png)
 
 
-<img src="https://media.discordapp.net/attachments/925431086643810376/932642713935962193/20210517_230901.jpg" width="330" height="355">
-<img src="https://media.discordapp.net/attachments/925431086643810376/932640776192679936/1642429273956.jpg" width="330" height="355">
-<img src="https://media.discordapp.net/attachments/925431086643810376/932644266726019132/Ruizo.jpg" width="330" height="355">
 
 ## Controls
 - WASD to move the camera in X's axis and Z's axis.
