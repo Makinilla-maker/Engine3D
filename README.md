@@ -67,12 +67,12 @@ Our shaders options are the following:
 <img src="Web/gif1.gif">
 
 
-**ka, kd, ks**: Change the contrast of the wave.
-**directionA, directionB, directionC**: Changes the direction of the waves
-**shininess**: Changes the brightness of the waves.
-**stepnesssA, steepnessB, steepnessC**: Changes the height and rhythm of the waves.
-**wavelenghtA, wavelenghtB, wavelenghtC**: Changes the position of the waves.
-**Edit Shader**: You can change the values or the shaders itself entering to the code version of the shader from this menu.
+- **ka, kd, ks**: Change the contrast of the wave.
+- **directionA, directionB, directionC**: Changes the direction of the waves
+- **shininess**: Changes the brightness of the waves.
+- **stepnesssA, steepnessB, steepnessC**: Changes the height and rhythm of the waves.
+- **wavelenghtA, wavelenghtB, wavelenghtC**: Changes the position of the waves.
+- **Edit Shader**: You can change the values or the shaders itself entering to the code version of the shader from this menu.
 <img src="Web/gif2.gif">
 
 ## GitHub
