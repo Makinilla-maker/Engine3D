@@ -179,6 +179,7 @@ void MaterialComponent::OnEditor()
 				glDeleteProgram(meshCom->shadertoRecompily->parameters.shaderID);
 
 				meshCom->LoadShader(meshCom->fileToEdit.c_str());
+				meshCom->GetShader()->parameters.uniforms = ShaderImporter::GetShaderUniforms(meshCom->GetShader()->parameters.shaderID);
 			}
 			ImGui::EndMenuBar();
 		}
